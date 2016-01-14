@@ -17,7 +17,7 @@ module add_screw_hole(screw_center_offset, screw_type) {
   head_hole_height = screw("screw_head_height") + screw("screw_sunk") + $static_clearance;
 
   // depth of hole for fixing in place.
-  fitting_hex_height = $thickness;
+  fitting_hex_height = $thickness + $static_clearance;
 
   post_height = head_hole_height + fitting_hex_height + $thickness;
   post_radius = screw("screw_head_diameter")/2 + $static_clearance + $thickness;
@@ -25,7 +25,7 @@ module add_screw_hole(screw_center_offset, screw_type) {
 
   difference() {
     union() {
-      children(0);
+      children();
       translate(screw_center_offset) {
         // post
         cylinder(h=post_height, r=post_radius);
@@ -41,7 +41,7 @@ module add_screw_hole(screw_center_offset, screw_type) {
     // fitting hex
     translate(screw_center_offset+[0,0,post_height-fitting_hex_height]) {
       rotate(360/12) {
-        cylinder(h=fitting_hex_height+$epsilon, r=screw("nut_diameter")/2,$fn=6);
+        cylinder(h=fitting_hex_height+$epsilon, r=screw("nut_diameter")/2+$static_clearance*2/sqrt(3),$fn=6);
       }
     }
   }
@@ -49,6 +49,7 @@ module add_screw_hole(screw_center_offset, screw_type) {
 
 
 //For testing, uncomment.
+
 /*
 include <box_bottom.scad>;
 $fn = 50;
@@ -61,44 +62,65 @@ add_screw_hole([10,10,0], "m3"){box_bottom();}
 
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
 module add_screw_post(post_center_offset, screw_type) {
-  function screw(p) = get_screw_param(screw_type, p);
-  children(0);
-  // box outer height - post height of screw hole - offset if the post is floating
-  post_height = $box_size[2]-(screw("screw_head_height") + screw("screw_sunk") + $thickness + post_center_offset[2]);
-  post_radius = screw("nut_diameter")/2 + $thickness;
+  if (!$thickness) {
+    echo("ERROR: $thickness not defined in add_screw_post");
+  }
+  if (!$static_clearance) {
+    echo("ERROR: $static_clearance not defined in add_screw_post");
+  }
+  if (!$epsilon) {
+    echo("ERROR: $epsilon not defined in add_screw_post");
+  }
 
-  scorew_hole_height = post_height;
+  function screw(p) = get_screw_param(screw_type, p);
+  // box outer height - post height of screw hole - offset if the post is floating
+  post_height = $box_size[2] -
+    (screw("screw_head_height") + screw("screw_sunk") + $static_clearance + 2*$thickness) // post_height from above
+    - $static_clearance // so that the posts meet with a small gap
+    - post_center_offset[2]; // in case the post is floating
+  nut_radius_with_clearance = screw("nut_diameter")/2 + $static_clearance*2/sqrt(3);
+  post_radius = nut_radius_with_cleraance + $thickness;
+
+  fitting_hex_height = post_height + $thickness;
+
+  children();
   translate(post_center_offset) {
     difference() {
-      // post
       intersection() { //intersection so that the post isn't sticking out of the box top.
-        translate(-post_center_offset) hull() children(0);
-        cylinder(h=post_height, r=post_radius);
-      }
-      // screw hole
-      translate(-post_center_offset) {
-        difference() { // difference so that the hole doesn't go through the box.
-          translate(post_center_offset) {
-            cylinder(h=post_height+$epsilon,
-                     r=screw_thread_diameter/2+$static_clearance);
+        translate(-post_center_offset) {
+          hull() {
+            children();
           }
-          children(0);
+        }
+        union() {
+          // post
+          cylinder(h=post_height, r=post_radius);
+          // fixing hex stub
+          translate([0,0,post_height-nut_height]) {
+            rotate(360/12) {
+              cylinder(h=nut_height+$epsilon,
+                       r=nut_diameter/2+$static_clearance*2/sqrt(3),
+                       $fn=6);
+            }
+          }
         }
       }
-      //fixing hex hole
-      translate([0,0,post_height-nut_height]) {
-        rotate(360/12) {
-          cylinder(h=nut_height+$epsilon,
-                   r=nut_diameter/2+$static_clearance*2/sqrt(3),
-                   $fn=6);
+      difference() { // difference so that the holes don't go through the box.
+        union() {
+          // screw hole
+          cylinder(h=post_height+$epsilon,
+                   r=screw("screw_thread_diameter")/2+$static_clearance);
+          // nut hole
+          translate([0,0,post_height-$thickness-3*nut_height-$thickness]) {
+            rotate(360/12) {
+              cylinder(h=3 * nut_height,
+                       r=nut_diameter/2+$static_clearance*2/sqrt(3),
+                       $fn=6);
+            }
+          }
         }
-      }
-      // nut hole
-      translate([0,0,post_height-4*nut_height-$thickness]) {
-        rotate(360/12) {
-          cylinder(h=3 * nut_height,
-                   r=nut_diameter/2+$static_clearance*2/sqrt(3),
-                   $fn=6);
+        translate(-post_center_offset) {
+          children();
         }
       }
       // nut insertion opening
@@ -115,4 +137,4 @@ module add_screw_post(post_center_offset, screw_type) {
 }
 
 //add_nut_post([20,20,0], 50) {%cube([50,50,50]);}
-*/
+
