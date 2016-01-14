@@ -1,55 +1,86 @@
 include <globals.scad>;
 
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
-module add_top_support_post(post_center_offset, outer_box_height) {
+module add_top_support_post(post_center_offset, pcb_hole_diameter, pcb_thickness) {
+  if (!$thickness) {
+    echo("ERROR: $thickness is not set in add_top_support_post");
+  }
+  if (!$pcb_top_clearance) {
+    echo("ERROR: $pcb_top_clearance is not set in add_top_support_post");
+  }
+  if (!$static_clearance) {
+    echo("ERROR: $pcb_top_clearance is not set in add_top_support_post");
+  }
   children(0);
-  // box outer height - post height of screw hole - offset if the post is floating
-  post_height = outer_box_height-(screw_head_height+screw_sunk+$thickness)-post_center_offset[2];
+  // Height of the post that supports the stub.
+  post_height = $thickness + $pcb_top_clearance + $static_clearance;
+  post_radius = pcb_hole_diameter/2 + $thickness + $static_clearance;
+  // Height of the stub including post height.
+  stub_height = post_height + $pcb_thickness + $thickness;
+  stub_radius = pcb_hole_diameter/2 - $static_clearance;
   translate(post_center_offset) {
     difference() {
-      // post
       intersection() { //intersection so that the post isn't sticking out of the box top.
-        translate(-post_center_offset) hull() children(0);
-        cylinder(h=post_height, r=nut_diameter/2+$thickness);
-      }
-      // screw hole
-      translate(-post_center_offset) {
-        difference() { // difference so that the hole doesn't go through the box.
-          translate(post_center_offset) {
-            cylinder(h=post_height+$epsilon,
-                     r=screw_thread_diameter/2+$static_clearance);
+        translate(-post_center_offset) {
+          hull() {
+            children(0);
           }
         }
-        children(0);
-      }
-      //fixing hex hole
-      translate([0,0,post_height-nut_height]) {
-        rotate(360/12) {
-          cylinder(h=nut_height+$epsilon,
-                   r=nut_diameter/2+$static_clearance*2/sqrt(3),
-                   $fn=6);
-        }
-      }
-      // nut hole
-      translate([0,0,post_height-4*nut_height-$thickness]) {
-        rotate(360/12) {
-          cylinder(h=3 * nut_height,
-                   r=nut_diameter/2+$static_clearance*2/sqrt(3),
-                   $fn=6);
-        }
-      }
-      // nut insertion opening
-      translate([0,0,post_height-3.5*nut_height-$thickness]) {
-        //rotate(360/12)
-        translate([-nut_width/2-$static_clearance,0,0]) {
-          cube([nut_width+$static_clearance*2,
-                nut_diameter/2+$thickness+$epsilon, // from post radius
-                nut_height+$static_clearance*2]); // todo: make bigger for removal of nuts?
+        union() {
+          // post
+          cylinder(h=post_height, r=post_radius);
+          // stub
+          cylinder(h=stub_height, r=stub_radius);
         }
       }
     }
   }
 }
 
-include <m3_screw.scad>;
-add_nut_post([20,20,0], 50) {%cube([50,50,50]);}
+// post_center_offset should be relative to bottom-left corner of the box when right-side up.
+module add_bottom_support_post(post_center_offset, pcb_hole_diameter, pcb_thickness, outside_box_height) {
+  if (!$thickness) {
+    echo("ERROR: $thickness is not set in add_bottom_support_post");
+  }
+  if (!$pcb_top_clearance) {
+    echo("ERROR: $pcb_top_clearance is not set in add_bottom_support_post");
+  }
+  if (!$pcb_thickness) {
+    echo("ERROR: $pcb_thickness is not set in add_bottom_support_post");
+  }
+  if (!$static_clearance) {
+    echo("ERROR: $pcb_top_clearance is not set in add_bottom_support_post");
+  }
+  children(0);
+  // Height of the post that accepts the stub.
+  post_height = outside_box_height - $thickness - $pcb_top_clearance - 2*$static_clearance - $pcb_thickness;
+  post_radius = pcb_hole_diameter/2 + $thickness + $static_clearance;
+  // Depth of hole to accept the stub.
+  stub_hole_height = $pcb_thickness + $thickness + $static_clearance;
+  stub_hole_radius = pcb_hole_diameter/2;
+  translate(post_center_offset) {
+    difference() {
+      intersection() { //intersection so that the post isn't sticking out of the box top.
+        translate(-post_center_offset) {
+          hull() {
+            children(0);
+          }
+        }
+        difference() {
+          // post
+          cylinder(h=post_height, r=post_radius);
+          // stub hole
+          translate([0,0,post_height-stub_hole_height]) {
+            cylinder(h=stub_hole_height+$epsilon, r=pcb_hole_diameter/2);
+          }
+        }
+      }
+    }
+  }
+}
+
+$pcb_top_clearance = 10;
+$pcb_thickness = 3;
+$thickness = 2;
+add_top_support_post([20,20,0], 5, 5) {%cube([50,50,50]);}
+add_bottom_support_post([30,30,0], 5, 5, 50) {%cube([50,50,50]);}

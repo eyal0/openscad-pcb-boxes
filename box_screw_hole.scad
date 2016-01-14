@@ -1,5 +1,3 @@
-include <globals.scad>
-
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
 module add_screw_hole(screw_center_offset, screw_scad) {
   post_height = screw_head_height + screw_sunk + $thickness;
