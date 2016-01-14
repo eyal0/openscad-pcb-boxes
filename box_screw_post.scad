@@ -65,11 +65,17 @@ module add_screw_post(post_center_offset, screw_type) {
   if (!$thickness) {
     echo("ERROR: $thickness not defined in add_screw_post");
   }
-  if (!$static_clearance) {
+  if (!$dynamic_clearance) {
     echo("ERROR: $static_clearance not defined in add_screw_post");
+  }
+  if (!$static_clearance) {
+    echo("ERROR: $dynamic_clearance not defined in add_screw_post");
   }
   if (!$epsilon) {
     echo("ERROR: $epsilon not defined in add_screw_post");
+  }
+  if (!$box_size) {
+    echo("ERROR: $box_size not defined in add_screw_post");
   }
 
   function screw(p) = get_screw_param(screw_type, p);
@@ -78,11 +84,15 @@ module add_screw_post(post_center_offset, screw_type) {
     (screw("screw_head_height") + screw("screw_sunk") + $static_clearance + 2*$thickness) // post_height from above
     - $static_clearance // so that the posts meet with a small gap
     - post_center_offset[2]; // in case the post is floating
-  nut_radius_with_clearance = screw("nut_diameter")/2 + $static_clearance*2/sqrt(3);
-  post_radius = nut_radius_with_cleraance + $thickness;
+  nut_radius_with_static_clearance = screw("nut_diameter")/2 + $static_clearance*2/sqrt(3);
+  nut_radius_with_dynamic_clearance = screw("nut_diameter")/2 + $dynamic_clearance*2/sqrt(3);
+  post_radius = nut_radius_with_dynamic_clearance + $thickness;
 
   fitting_hex_height = post_height + $thickness;
 
+  nut_opening_height = screw("nut_diameter") + 2*$dynamic_clearance;
+  nut_opening_width = screw("nut_width")+2*$dynamic_clearance;
+  nut_pocket_height = 2*$static_clearance + 2*screw("nut_thickness") + nut_opening_height;
   children();
   translate(post_center_offset) {
     difference() {
@@ -96,12 +106,10 @@ module add_screw_post(post_center_offset, screw_type) {
           // post
           cylinder(h=post_height, r=post_radius);
           // fixing hex stub
-          translate([0,0,post_height-nut_height]) {
-            rotate(360/12) {
-              cylinder(h=nut_height+$epsilon,
-                       r=nut_diameter/2+$static_clearance*2/sqrt(3),
-                       $fn=6);
-            }
+          rotate(360/12) {
+            cylinder(h=fitting_hex_height,
+                     r=nut_radius_with_static_clearance,
+                     $fn=6);
           }
         }
       }
@@ -110,12 +118,21 @@ module add_screw_post(post_center_offset, screw_type) {
           // screw hole
           cylinder(h=post_height+$epsilon,
                    r=screw("screw_thread_diameter")/2+$static_clearance);
-          // nut hole
-          translate([0,0,post_height-$thickness-3*nut_height-$thickness]) {
+          // nut pocket
+          translate([0,0,post_height-$thickness-nut_pocket_height]) {
             rotate(360/12) {
-              cylinder(h=3 * nut_height,
-                       r=nut_diameter/2+$static_clearance*2/sqrt(3),
+              cylinder(h=nut_pocket_height,
+                       r=nut_radius_with_dynamic_clearance,
                        $fn=6);
+            }
+          }
+          // nut insertion opening
+          translate([0,0,post_height-$thickness-nut_pocket_height+$static_clearance+screw("nut_thickness")]) {
+            //rotate(360/12)
+            translate([-nut_opening_width/2,0,0]) {
+              cube([nut_opening_width,
+                    post_radius+$epsilon,
+                    nut_opening_height]);
             }
           }
         }
@@ -123,18 +140,21 @@ module add_screw_post(post_center_offset, screw_type) {
           children();
         }
       }
-      // nut insertion opening
-      translate([0,0,post_height-3.5*nut_height-$thickness]) {
-        //rotate(360/12)
-        translate([-nut_width/2-$static_clearance,0,0]) {
-          cube([nut_width+$static_clearance*2,
-                nut_diameter/2+$thickness+$epsilon, // from post radius
-                nut_height+$static_clearance*2]); // todo: make bigger for removal of nuts?
-        }
-      }
     }
   }
 }
+
+// For testing, uncomment.
+
+include <box_top.scad>;
+include <box_bottom.scad>;
+$fn = 50;
+$thickness = 2;
+$static_clearance = 0.2;
+$dynamic_clearance = 0.4;
+$epsilon = 0.01;
+$box_size = [100,50,30];
+add_screw_post([10,10,0], "m3"){%box_top();}
 
 //add_nut_post([20,20,0], 50) {%cube([50,50,50]);}
 

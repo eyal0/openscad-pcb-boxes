@@ -6,7 +6,7 @@ m3_screw =
    ["screw_head_height", 0.7*3],
    ["nut_diameter", 6.29], // measured 6.29, spec 2*m3; //6.4?
    ["nut_width", 6.29*sqrt(3)/2], // measured 5.44
-   ["nut_height", 0.9*3], // forgot to measure
+   ["nut_thickness", 0.9*3], // forgot to measure
    ["screw_sunk", 0.7*3]];
 
 screws = [["m3", m3_screw]];
