@@ -90,7 +90,7 @@ module add_screw_post(post_center_offset, screw_type) {
 
   nut_opening_height = screw("nut_diameter") + 2*$dynamic_clearance;
   nut_opening_width = screw("nut_width")+2*$dynamic_clearance;
-  nut_pocket_height = 2*$static_clearance + 2*screw("nut_thickness") + nut_opening_height;
+  nut_pocket_height = 2*$static_clearance +2*screw("nut_thickness") + nut_opening_height;
   children();
   translate(post_center_offset-[0,0,$thickness]) {
     difference() {
