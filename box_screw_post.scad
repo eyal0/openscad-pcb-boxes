@@ -92,10 +92,10 @@ module add_screw_post(post_center_offset, screw_type) {
   nut_opening_width = screw("nut_width")+2*$dynamic_clearance;
   nut_pocket_height = 2*$static_clearance +2*screw("nut_thickness") + nut_opening_height;
   children();
-  translate(post_center_offset-[0,0,$thickness]) {
+  translate(post_center_offset) {
     difference() {
       intersection() { //intersection so that the post isn't sticking out of the box top.
-        translate(-post_center_offset+[0,0,$thickness]) {
+        translate(-post_center_offset) {
           hull() {
             children();
           }
@@ -114,8 +114,10 @@ module add_screw_post(post_center_offset, screw_type) {
       difference() { // difference so that the holes don't go through the box.
         union() {
           // screw hole
-          cylinder(h=post_height+$epsilon,
-                   r=screw("screw_thread_diameter")/2+$static_clearance);
+          translate([0,0,$epsilon]) { // so that it sticks out of the top and not the bottom.
+            cylinder(h=fitting_hex_height,
+                     r=screw("screw_thread_diameter")/2+$static_clearance);
+          }
           // nut pocket
           translate([0,0,post_height-$thickness-nut_pocket_height]) {
             rotate(360/12) {

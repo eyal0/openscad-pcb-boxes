@@ -11,5 +11,5 @@ demo_box_top() {
   add_screw_post([10,10,0], "m3") %box_top();
 }
 demo_box_bottom() {
-  add_screw_hole([10,$box_size[1]-10-2*$thickness,0], "m3") %box_bottom();
+  add_screw_hole([10-$thickness,$box_size[1]-10-$thickness,0], "m3") %box_bottom();
 }
