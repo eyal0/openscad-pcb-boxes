@@ -8,10 +8,7 @@ module box_bottom() {
   if (!$static_clearance) {
     echo("ERROR: $static_clearance not defined in box_bottom");
   }
-  translate ([$static_clearance,$static_clearance,0]) {
-    echo($box_size*[[1,0,0],
-                    [0,1,0],
-                    [0,0,0]]);
+  translate ([$thickness+$static_clearance, $thickness+$static_clearance, 0]) {
     cube($box_size*[[1,0,0],
                     [0,1,0],
                     [0,0,0]] +
@@ -25,18 +22,17 @@ module print_box_bottom() {
   if (!$static_clearance) {
     echo("ERROR: $static_clearance not defined in print_box_bottom");
   }
-  translate([-$static_clearance, -$static_clearance, 0]) {
+  if (!$thickness) {
+    echo("ERROR: $thickness not defined in print_box_bottom");
+  }
+  translate([-$thickness-$static_clearance, -$thickness-$static_clearance, 0]) {
     children();
   }
 }
 
 module demo_box_bottom() {
-  if (!$thickness) {
-    echo("ERROR: $thickness not defined in demo_box_bottom");
-  }
-  translate([$thickness, $thickness, 0]) {
-    children();
-  }
+  // Box bottom is already aligned for demo.
+  children();
 }
 
 //box_bottom($box_size=[100,50,20], $thickness=3, $static_clearance=0.2);
