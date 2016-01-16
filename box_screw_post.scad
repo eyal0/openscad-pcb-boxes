@@ -46,19 +46,6 @@ module add_screw_hole(screw_center_offset, screw_type) {
   }
 }
 
-
-//For testing, uncomment.
-
-/*
-include <box_bottom.scad>;
-$fn = 50;
-$thickness = 2;
-$static_clearance = 0.2;
-$epsilon = 0.01;
-$box_size = [100,50,30];
-add_screw_hole([10,10,0], "m3"){box_bottom();}
-*/
-
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
 module add_screw_post(post_center_offset, screw_type) {
   if (!$thickness) {
@@ -145,6 +132,7 @@ module add_screw_post(post_center_offset, screw_type) {
 }
 
 // For testing, uncomment.
+
 /*
 include <box_top.scad>;
 include <box_bottom.scad>;
@@ -154,7 +142,6 @@ $static_clearance = 0.2;
 $dynamic_clearance = 0.4;
 $epsilon = 0.01;
 $box_size = [100,50,30];
-add_screw_post([10,10,0], "m3"){%box_top();}
+demo_box_top() add_screw_post([10,10,0], "m3"){box_top();}
+demo_box_bottom() add_screw_hole([10,40,0], "m3"){%box_bottom();}
 */
-//add_nut_post([20,20,0], 50) {%cube([50,50,50]);}
-
