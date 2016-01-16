@@ -6,10 +6,12 @@ $thickness = 2;
 $static_clearance = 0.2;
 $dynamic_clearance = 0.4;
 $epsilon = 0.01;
-$box_size = [100,40,30];
+$box_size = [100,50,40];
 demo_box_top() {
-  add_screw_post([10,10,0], "m3") %box_top();
+  add_screw_post([6,6,10], "m3")
+    %box_top();
 }
 demo_box_bottom() {
-  add_screw_hole([10-$thickness,$box_size[1]-10-$thickness,0], "m3") %box_bottom();
+  add_screw_hole([6,$box_size[1]-6,0], "m3")
+    %box_bottom();
 }
