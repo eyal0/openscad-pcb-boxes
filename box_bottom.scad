@@ -1,15 +1,15 @@
 module box_bottom() {
   if (!$box_size) {
     echo("ERROR: $box_size not defined in box_bottom");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$thickness) {
     echo("ERROR: $thickness not defined in box_bottom");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$static_clearance) {
     echo("ERROR: $static_clearance not defined in box_bottom");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   translate ([$thickness+$static_clearance, $thickness+$static_clearance, 0]) {
     cube($box_size*[[1,0,0],
@@ -24,11 +24,11 @@ module box_bottom() {
 module print_box_bottom() {
   if (!$static_clearance) {
     echo("ERROR: $static_clearance not defined in print_box_bottom");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$thickness) {
     echo("ERROR: $thickness not defined in print_box_bottom");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   translate([-$thickness-$static_clearance, -$thickness-$static_clearance, 0]) {
     children();

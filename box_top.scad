@@ -4,15 +4,15 @@
 module box_top() {
   if (!$box_size) {
     echo("ERROR: $box_size not defined in box_top");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$thickness) {
     echo("ERROR: $thickness not defined in box_top");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$epsilon) {
     echo("ERROR: $epsilon not defined in box_top");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   inside_dimensions = $box_size-[2*$thickness, 2*$thickness, $thickness];
   translate([$thickness, $thickness, $thickness]) {
@@ -40,11 +40,11 @@ module print_box_top() {
 module demo_box_top() {
   if (!$thickness) {
     echo("ERROR: $thickness not defined in demo_box_top");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$box_size) {
     echo("ERROR: $box_size not defined in demo_box_top");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   translate([0,
              $box_size[1],

@@ -1,18 +1,18 @@
-include <screws.scad>;
+use <screws.scad>;
 
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
 module add_screw_hole(screw_center_offset, screw_type) {
   if (!$thickness) {
     echo("ERROR: $thickness not defined in add_screw_hole");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$static_clearance) {
     echo("ERROR: $static_clearance not defined in add_screw_hole");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$epsilon) {
     echo("ERROR: $epsilon not defined in add_screw_hole");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
 
   function screw(p) = get_screw_param(screw_type, p);
@@ -53,23 +53,23 @@ module add_screw_hole(screw_center_offset, screw_type) {
 module add_screw_post(post_center_offset, screw_type) {
   if (!$thickness) {
     echo("ERROR: $thickness not defined in add_screw_post");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$dynamic_clearance) {
     echo("ERROR: $static_clearance not defined in add_screw_post");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$static_clearance) {
     echo("ERROR: $dynamic_clearance not defined in add_screw_post");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$epsilon) {
     echo("ERROR: $epsilon not defined in add_screw_post");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
   if (!$box_size) {
     echo("ERROR: $box_size not defined in add_screw_post");
-    echo(UNDEFINED_DYNAMIC_VARIABLE_ERROR);
+    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
 
   function screw(p) = get_screw_param(screw_type, p);
@@ -142,8 +142,8 @@ module add_screw_post(post_center_offset, screw_type) {
 // For testing, uncomment.
 
 /*
-include <box_top.scad>;
-include <box_bottom.scad>;
+use <box_top.scad>;
+use <box_bottom.scad>;
 $fn = 50;
 $thickness = 2;
 $static_clearance = 0.2;
