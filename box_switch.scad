@@ -161,6 +161,7 @@ module demo_switch(handle_offset0, handle_offset1, handle_base_height, handle_he
 
 // Uncomment for testing.
 
+/*
 use <box_top.scad>;
 //use <box_bottom.scad>;
 
@@ -184,6 +185,4 @@ demo_box_top() {
     box_top();
   }
 }
-
-//demo_box_bottom() add_bottom_support_post([20,30,0], 5) {%box_bottom();}
-
+*/
