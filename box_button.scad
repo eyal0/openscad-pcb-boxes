@@ -4,8 +4,6 @@
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
 
-use <box_top.scad>;
-
 module add_top_button_hole(button_offset, button_height) {
   if (!$thickness) {
     echo("ERROR: $thickness is not set in add_top_button_hole");
@@ -135,6 +133,8 @@ module print_button() {
   }
 }
 
+use <box_top.scad>;
+
 module demo_button(button_offset, button_height) {
   if (!$thickness) {
     echo("ERROR: $thickness is not set in print_button");
@@ -152,9 +152,7 @@ module demo_button(button_offset, button_height) {
 
 // Uncomment for testing.
 
-use <box_top.scad>;
-use <box_bottom.scad>;
-
+/*
 $epsilon = 0.01;
 $pcb_top_clearance = 10;
 $pcb_thickness = 10;
@@ -190,6 +188,5 @@ demo_button([20,20,0], 5) {
       );
   }
 }
-
-//demo_box_bottom() add_bottom_support_post([20,30,0], 5) {%box_bottom();}
+*/
 
