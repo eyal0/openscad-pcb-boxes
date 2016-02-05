@@ -1,5 +1,7 @@
 use <screws.scad>;
 
+function screw_hole_post_radius(screw_type) = get_screw_param(screw_type, "screw_head_diameter")/2 + $static_clearance + $thickness;
+
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
 module add_screw_hole(screw_center_offset, screw_type) {
   if (!$thickness) {
@@ -23,7 +25,7 @@ module add_screw_hole(screw_center_offset, screw_type) {
   fitting_hex_height = $thickness + $static_clearance;
 
   post_height = head_hole_height + $thickness + fitting_hex_height;
-  post_radius = screw("screw_head_diameter")/2 + $static_clearance + $thickness;
+  post_radius = screw_hole_post_radius(screw_type);
 
   difference() {
     union() {
@@ -48,6 +50,13 @@ module add_screw_hole(screw_center_offset, screw_type) {
     }
   }
 }
+
+function screw_post_radius(screw_type) = get_screw_param(screw_type, "nut_diameter")/2 + $dynamic_clearance*2/sqrt(3) + $thickness; // matching post_radius below
+
+function screw_posts_max_radius(screw_type) =
+  screw_hole_post_radius(screw_type) > screw_post_radius(screw_type) ?
+  screw_hole_post_radius(screw_type) :
+  screw_post_radius(screw_type);
 
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
 module add_screw_post(post_center_offset, screw_type) {
