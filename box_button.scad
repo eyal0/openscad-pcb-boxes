@@ -149,10 +149,6 @@ module demo_button(button_offset, button_height) {
   }
 }
 
-module demo_or_print_button(button_offset, button_height) {
-  if ($output_type == "demo") {
-    
-
 // Uncomment for testing.
 
 /*
