@@ -7,8 +7,8 @@ use <box_screen.scad>;
 use <screws.scad>;
 use <box_screw_post.scad>;
 
-//part is one of top, bottom, button, demo.
-part = "demo";
+//$part is one of top, bottom, button, demo.
+$part = "top";
 
 pcb_width = 72.7;
 pcb_depth = 59.9;
@@ -78,72 +78,56 @@ module add_bottom_support_posts() {
     children();
 }
 
-if (part == "top") {
-  print_box_top() {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-      add_top_screen_hole(pcb_offset+[8+3,0,0], 5.1) {
-        square([56.6-2*3, 37.4-3-9]);
-        add_top_screen_hole([0,pcb_offset[1],0]+[-0.4,pcb_depth-14.5,0], 0) {
-          square([51.4+0.4,14.9]);
-          add_top_support_posts() {
-            add_screw_posts_in_corners("m3") {
-              box_top();
-            }
+module render_parts() {
+  if ($part == "top") {
+    print_box_top() {
+      children(0);
+    }
+  }
+  if ($part == "bottom") {
+    print_box_bottom() {
+      children(1);
+    }
+  }
+  if ($part == "button") {
+    print_button() {
+      children(2);
+    }
+  }
+  if ($part == "demo") {
+    demo_box_top() {
+      children(0);
+    }
+    demo_box_bottom() {
+      children(1);
+    }
+    demo_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
+      children(2);
+    }
+  }
+}
+
+render_parts() {
+  add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
+    circle(r=11.5/2);
+    add_top_screen_hole(pcb_offset+[8+3,0,0], 5.1) {
+      square([56.6-2*3, 37.4-3-9]);
+      add_top_screen_hole([0,pcb_offset[1],0]+[-0.4,pcb_depth-14.5,0], 0) {
+        square([51.4+0.4,14.9]);
+        add_top_support_posts() {
+          add_screw_posts_in_corners("m3") {
+            box_top();
           }
         }
-      }
-    }
-  }
-}
-
-if (part == "bottom") {
-  print_box_bottom() {
-    add_bottom_support_posts() {
-      add_screw_holes_in_corners("m3") {
-        box_bottom();
-      }
-    }
-  }
-}
-
-if (part == "button") {
-  print_button() {
-    add_button(8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-    }
-  }
-}
-
-if (part == "demo") {
-  demo_box_top() {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-      add_top_screen_hole(pcb_offset+[8+3,0,0], 5.1) {
-        square([56.6-2*3, 37.4-3-9]);
-        add_top_screen_hole([0,pcb_offset[1],0]+[-0.4,pcb_depth-14.5,0], 0) {
-          square([51.4+0.4,14.9]);
-          add_top_support_posts() {
-            add_screw_posts_in_corners("m3") {
-              box_top();
-            }
-          }
         }
-      }
     }
   }
-
-  demo_box_bottom() {
-    add_bottom_support_posts() {
-      add_screw_holes_in_corners("m3") {
-        box_bottom();
-      }
+  add_bottom_support_posts() {
+    add_screw_holes_in_corners("m3") {
+      box_bottom();
     }
   }
-
-  demo_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-    add_button(8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-    }
+  add_button(8.4-$pcb_thickness) {
+    circle(r=11.5/2);
   }
 }
