@@ -31,22 +31,23 @@ pcb_offset = [($box_size[0]-pcb_width)/2,
 
 // v is a row vector.  Output is the offset needed if the box is upsidedown
 function upsidedown_offset(v) = [v[0], $box_size[1]-v[1], v[2]];
+function upsidedown_rotate(angle) = -angle;
 
 module add_screw_posts_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], "m3")
-  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], "m3")
-  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], "m3")
-  add_screw_post([               delta_side,                delta_side, 0], "m3")
+  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], "m3",  90)
+  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], "m3",  90)
+  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], "m3", -90)
+  add_screw_post([               delta_side,                delta_side, 0], "m3", -90)
     children();
 }
 
 module add_screw_holes_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side, $box_size[1] - delta_side, 0]), "m3")
-  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side,                delta_side, 0]), "m3")
-  add_screw_hole(upsidedown_offset([               delta_side, $box_size[1] - delta_side, 0]), "m3")
-  add_screw_hole(upsidedown_offset([               delta_side,                delta_side, 0]), "m3")
+  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side, $box_size[1] - delta_side, 0]), "m3", upsidedown_rotate( 90))
+  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side,                delta_side, 0]), "m3", upsidedown_rotate( 90))
+  add_screw_hole(upsidedown_offset([               delta_side, $box_size[1] - delta_side, 0]), "m3", upsidedown_rotate(-90))
+  add_screw_hole(upsidedown_offset([               delta_side,                delta_side, 0]), "m3", upsidedown_rotate(-90))
     children();
 }
 
