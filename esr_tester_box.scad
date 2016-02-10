@@ -111,10 +111,12 @@ module render_parts() {
 render_parts() {
   add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
     circle(r=11.5/2);
-    add_top_screen_hole(pcb_offset+[8+3,0,0], 5.1) {
+    add_top_screen_hole(pcb_offset+[8+3,9,0], 5.1) {
       square([56.6-2*3, 37.4-3-9]);
-      add_top_screen_hole([0,pcb_offset[1],0]+[-0.4,pcb_depth-14.5,0], 0) {
-        square([51.4+0.4,14.9]);
+      add_top_screen_hole([0,pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
+        translate([0,-$static_clearance]) {
+          square([51.4+0.4,15+2*$static_clearance]);
+        }
         add_top_support_posts() {
           add_screw_posts_in_corners("m3") {
             box_top();
