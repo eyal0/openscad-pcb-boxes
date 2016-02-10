@@ -1,8 +1,5 @@
 #!python
 openscad_binary = 'openscad-nightly'
-#openscad_png = Builder(
-#        action = 'Xvfb :5 -screen 0 800x600x24 && DISPLAY=:5 ' + openscad_binary + ' -o $TARGET $SOURCE')
-#action = openscad_binary + ' -o $TARGET $SOURCE')
 
 import os
 
@@ -22,10 +19,16 @@ env = Environment(
     BUILDERS = {'Openscad': openscad})
 env["fn"] = ARGUMENTS.get('fn', 10)
 
-render_parts = ['demo', 'button', 'top', 'bottom']
-view_parts = render_parts
 
-for part in render_parts:
-  env.Openscad(target='esr_tester_' + part + '.stl', source=['esr_tester_box.scad'])
-for part in view_parts:
-  env.Openscad(target='esr_tester_' + part + '.png', source=['esr_tester_box.scad'])
+printable_parts = ['button', 'top', 'bottom']
+all_parts = ['demo'] + printable_parts
+
+
+for part in all_parts:
+  env.Openscad(target='esr_tester_' + part + '.stl',
+               source=['esr_tester_box.scad'])
+  env.Openscad(target='esr_tester_' + part + '.png',
+               source=['esr_tester_box.scad'])
+
+env.Alias('printable_parts',
+          ['esr_tester_' + part + '.stl' for part in printable_parts])
