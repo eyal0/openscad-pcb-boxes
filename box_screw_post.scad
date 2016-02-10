@@ -42,9 +42,9 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation) {
         translate([0,0,-$epsilon]) {
           // head hole
           cylinder(h=head_hole_height+$epsilon,
-                   r=screw("screw_head_diameter")/2+$static_clearance);
+                   r=screw("screw_head_diameter")/2+$static_clearance/cos(180/$fn));
           // screw hole
-          cylinder(h=post_height+$epsilon*2, r=screw("screw_thread_diameter")/2+$static_clearance);
+          cylinder(h=post_height+$epsilon*2, r=(screw("screw_thread_diameter")/2+$dynamic_clearance)/cos(180/$fn));
         }
         // fitting hex indentation
         translate([0,0,post_height-fitting_hex_height]) {
@@ -129,7 +129,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
             // screw hole
             translate([0,0,$epsilon]) { // so that it sticks out of the top and not the bottom.
               cylinder(h=fitting_hex_height,
-                       r=screw("screw_thread_diameter")/2+$static_clearance);
+                       r=(screw("screw_thread_diameter")/2+$dynamic_clearance)/cos(180/$fn));
             }
             // nut pocket
             translate([0,0,post_height-$thickness-nut_pocket_height]) {
@@ -163,7 +163,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
 /*
 use <box_top.scad>;
 use <box_bottom.scad>;
-$fn = 50;
+$fn = 60;
 $thickness = 2;
 $static_clearance = 0.2;
 $dynamic_clearance = 0.4;
