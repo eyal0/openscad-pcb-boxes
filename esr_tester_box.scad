@@ -115,7 +115,7 @@ render_parts() {
       square([56.6-2*3, 37.4-3-9]);
       add_top_screen_hole([0,pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
         translate([0,-$static_clearance]) {
-          square([51.4+0.4,15+2*$static_clearance]);
+          square([pcb_offset[0]+51.4+0.4,15+2*$static_clearance]);
         }
         add_top_support_posts() {
           add_screw_posts_in_corners("m3") {
