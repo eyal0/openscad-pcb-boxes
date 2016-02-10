@@ -54,28 +54,28 @@ module add_screw_holes_in_corners(screw_type) {
 module add_top_support_posts() {
   pcb_hole_diameter = 3;
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  left = 1.0;
-  right = pcb_width - left - pcb_hole_diameter;
-  top = 1.2;
-  bottom = 38.9;
-  add_top_support_post(pcb_offset+[ left,    top,0] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+[right,    top,0] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+[ left, bottom,0] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+[right, bottom,0] + pcb_hole_center_offset, pcb_hole_diameter)
+  top_left  =   [                                1.1,  1.4, 0];
+  top_right =   [pcb_width - pcb_hole_diameter - 1.1,  1.4, 0];
+  bottom_left = [                                1.1, 38.9, 0];
+  bottom_right =[pcb_width - pcb_hole_diameter - 1.1,   39, 0];
+  add_top_support_post(pcb_offset+ top_left     + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset+ top_right    + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset+ bottom_left  + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset+ bottom_right + pcb_hole_center_offset, pcb_hole_diameter)
     children();
 }
 
 module add_bottom_support_posts() {
   pcb_hole_diameter = 3;
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  left = 1.0;
-  right = pcb_width - left - pcb_hole_diameter;
-  top = 1.2;
-  bottom = 38.9;
-  add_bottom_support_post(upsidedown_offset(pcb_offset+[ left,    top,0] + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset+[right,    top,0] + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset+[ left, bottom,0] + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset+[right, bottom,0] + pcb_hole_center_offset), pcb_hole_diameter)
+  top_left  =   [                                1.1,  1.4, 0];
+  top_right =   [pcb_width - pcb_hole_diameter - 1.1,  1.4, 0];
+  bottom_left = [                                1.1, 38.9, 0];
+  bottom_right =[pcb_width - pcb_hole_diameter - 1.1,   39, 0];
+  add_bottom_support_post(upsidedown_offset(pcb_offset + top_left + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + top_right + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + bottom_left + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + bottom_right + pcb_hole_center_offset), pcb_hole_diameter)
     children();
 }
 
