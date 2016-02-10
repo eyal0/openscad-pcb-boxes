@@ -8,7 +8,7 @@ use <screws.scad>;
 use <box_screw_post.scad>;
 
 //$part is one of top, bottom, button, demo.
-$part = "top";
+$part = "demo";
 
 pcb_width = 72.7;
 pcb_depth = 59.9;
