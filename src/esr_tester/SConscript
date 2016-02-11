@@ -1,12 +1,12 @@
 #!python
 import itertools
 
-Import('env')
+Import('env openscad2')
 printable_parts = ['button', 'top', 'bottom']
 all_parts = ['demo'] + printable_parts
 
 for part in all_parts:
-  env.Openscad(target='esr_tester_' + part,
+  openscad2(target='esr_tester_' + part,
                source=['esr_tester_box'])
 
 env.Alias('esr_tester',

@@ -1,12 +1,12 @@
 #!python
 import itertools
 
-Import('env')
+Import('env openscad2')
 printable_parts = ['holes']
 all_parts = printable_parts
 
 for part in all_parts:
-  env.Openscad(target=part,
+  openscad2(target=part,
                source=[part])
 
 env.Alias('holes_demo',
