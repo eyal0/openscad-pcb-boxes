@@ -15,7 +15,7 @@ def openscad(target, source, env):
     print(command)
     #os.system(command)
 
-def openscad2(target, source):
+def openscad2(target, source, path):
   if '.' in str(target):
     targets = [str(target)]
   else:
@@ -24,14 +24,15 @@ def openscad2(target, source):
     sources = [str(source)]
   else:
     sources = [str(source[0]) + suffix for suffix in ['.scad']]
-  print targets
+  targets = [os.path.join(path, t) for t in targets]
+  sources = [os.path.join(path, s) for s in sources]
   for t in targets:
     for s in sources:
       env.Openscad(target=t, source=s)
 
 openscad = Builder(
     action = openscad)
-#VariantDir('src', 'output')
+VariantDir('src', 'output', duplicate=0)
 env = Environment(
     BUILDERS = {'Openscad': openscad})
 env["fn"] = ARGUMENTS.get('fn', 10)
@@ -39,4 +40,4 @@ env["fn"] = ARGUMENTS.get('fn', 10)
 Export('env openscad2')
 d = 'src'
 conscripts = [os.path.join(d,o,"SConscript") for o in os.listdir(d) if os.path.isfile(os.path.join(d,o,"SConscript"))]
-SConscript(conscripts)
+SConscript(conscripts[0])

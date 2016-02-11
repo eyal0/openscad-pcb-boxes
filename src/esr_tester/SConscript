@@ -7,7 +7,7 @@ all_parts = ['demo'] + printable_parts
 
 for part in all_parts:
   openscad2(target='esr_tester_' + part,
-               source=['esr_tester_box'])
+               source=['esr_tester_box'], path="src/esr_tester")
 
 env.Alias('esr_tester',
           list(itertools.chain([[part + '.stl', part + '.png']
