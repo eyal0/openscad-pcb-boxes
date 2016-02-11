@@ -1,11 +1,11 @@
-use <box_top.scad>;
-use <box_bottom.scad>;
+use <lib/box_top.scad>;
+use <lib/box_bottom.scad>;
 
-use <box_button.scad>;
-use <box_support_post.scad>;
-use <box_screen.scad>;
-use <screws.scad>;
-use <box_screw_post.scad>;
+use <lib/box_button.scad>;
+use <lib/box_support_post.scad>;
+use <lib/box_screen.scad>;
+use <lib/screws.scad>;
+use <lib/box_screw_post.scad>;
 
 //$part is one of top, bottom, button, demo.
 $part = "demo";
@@ -113,9 +113,9 @@ render_parts() {
     circle(r=11.5/2);
     add_top_screen_hole(pcb_offset+[8+3,9,0], 5.1) {
       square([56.6-2*3, 37.4-3-9]);
-      add_top_screen_hole([0,pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
+      add_top_screen_hole([-$epsilon, pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
         translate([0,-$static_clearance]) {
-          square([pcb_offset[0]+51.4+0.4,15+2*$static_clearance]);
+          square([pcb_offset[0]+51.4+0.4+$epsilon,15+2*$static_clearance]);
         }
         add_top_support_posts() {
           add_screw_posts_in_corners("m3") {

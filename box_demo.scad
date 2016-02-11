@@ -1,7 +1,7 @@
-use <box_top.scad>;
-use <box_bottom.scad>;
-use <box_screw_post.scad>;
-use <box_support_post.scad>;
+use <lib/box_top.scad>;
+use <lib/box_bottom.scad>;
+use <lib/box_screw_post.scad>;
+use <lib/box_support_post.scad>;
 
 $fn = 50;
 $thickness = 2;
