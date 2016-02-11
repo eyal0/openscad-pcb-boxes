@@ -49,7 +49,8 @@ module add_top_button_hole(button_offset, button_height) {
       linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance, convexity=10) {
         difference() {
           offset(r=$thickness) {
-            offset(r=$dynamic_clearance) {
+            offset(r=$dynamic_clearance) {  // make space for movement
+              // this and the next line to round the button's corners
               offset(r=$thickness) {
                 offset(r=-$thickness) {
                   children(0);
@@ -57,7 +58,8 @@ module add_top_button_hole(button_offset, button_height) {
               }
             }
           }
-          offset(r=$dynamic_clearance) {
+          offset(r=$dynamic_clearance) {  // make space for movement
+            // this and the next line to round the button's corners
             offset(r=$thickness) {
               offset(r=-$thickness) {
                 children(0);
