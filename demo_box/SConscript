@@ -1,0 +1,20 @@
+#!python
+import itertools
+
+Import('env')
+printable_parts = ['top', 'bottom']
+all_parts = ['demo'] + printable_parts
+
+for part in all_parts:
+  env.Openscad(target='demo_' + part + '.stl',
+               source=['demo_box.scad'])
+  env.Openscad(target='demo_' + part + '.png',
+               source=['demo_box.scad'])
+
+env.Alias('demo_box',
+          [['demo_' + part + '.stl', 'demo_' + part + '.png']
+           for part in all_parts])
+
+env.Alias('demo_printable_parts',
+          ['demo_' + part + '.stl'
+           for part in printable_parts])

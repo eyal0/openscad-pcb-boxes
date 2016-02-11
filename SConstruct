@@ -19,16 +19,7 @@ env = Environment(
     BUILDERS = {'Openscad': openscad})
 env["fn"] = ARGUMENTS.get('fn', 10)
 
-
-printable_parts = ['button', 'top', 'bottom']
-all_parts = ['demo'] + printable_parts
-
-
-for part in all_parts:
-  env.Openscad(target='esr_tester_' + part + '.stl',
-               source=['esr_tester_box.scad'])
-  env.Openscad(target='esr_tester_' + part + '.png',
-               source=['esr_tester_box.scad'])
-
-env.Alias('printable_parts',
-          ['esr_tester_' + part + '.stl' for part in printable_parts])
+Export('env')
+SConscript(['esr_tester/SConscript',
+            'demo_box/SConscript',
+          ])
