@@ -1,11 +1,11 @@
-use <lib/box_top.scad>;
-use <lib/box_bottom.scad>;
+use <../lib/box_top.scad>;
+use <../lib/box_bottom.scad>;
 
-use <lib/box_button.scad>;
-use <lib/box_support_post.scad>;
-use <lib/box_screen.scad>;
-use <lib/screws.scad>;
-use <lib/box_screw_post.scad>;
+use <../lib/box_button.scad>;
+use <../lib/box_support_post.scad>;
+use <../lib/box_screen.scad>;
+use <../lib/screws.scad>;
+use <../lib/box_screw_post.scad>;
 
 //$part is one of top, bottom, button, demo.
 $part = "demo";
