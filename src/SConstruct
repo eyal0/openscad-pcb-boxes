@@ -2,6 +2,7 @@
 openscad_binary = 'openscad-nightly'
 
 import os
+import re
 
 def openscad(target, source, env):
   part = str(target[0]).split("_")[-1].split(".")[0]
@@ -33,6 +34,16 @@ openscad = Builder(
 env = Environment(
     BUILDERS = {'Openscad': openscad})
 env["fn"] = ARGUMENTS.get('fn', 10)
+
+include_re = re.compile(r'^(?:use|include)\s*\<(\S+)\>', re.M)
+
+def scad_scan(node, env, path):
+  contents = node.get_contents()
+  includes = include_re.findall(contents)
+  return includes
+
+scad_scan = Scanner(function = scad_scan, skeys = ['.scad'])
+env.Append(SCANNERS = scad_scan)
 
 Export('env openscad2')
 conscripts = ['esr_tester/SConscript', 'holes_demo/SConscript']
