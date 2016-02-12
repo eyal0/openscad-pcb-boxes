@@ -1,2 +1,2 @@
 #!python
-SConscript('src/SConstruct', variant_dir='output', duplicate=0)
+SConscript('src/SConstruct', variant_dir='output')

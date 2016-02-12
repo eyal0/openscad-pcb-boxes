@@ -7,7 +7,7 @@ all_parts = printable_parts
 
 for part in all_parts:
   openscad2(target=part,
-               source=[part])
+            source=[part], path="src/holes_demo")
 
 env.Alias('holes_demo',
           list(itertools.chain([[part + '.stl', part + '.png']

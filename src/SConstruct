@@ -36,4 +36,4 @@ env["fn"] = ARGUMENTS.get('fn', 10)
 
 Export('env openscad2')
 conscripts = ['esr_tester/SConscript', 'holes_demo/SConscript']
-SConscript(conscripts[0])
+SConscript(conscripts)
