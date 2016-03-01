@@ -20,7 +20,6 @@ $thickness = 2;
 $epsilon = 0.01;
 $fn=10;
 screw_type = "m3";
-$xy_offset = -0.15;
 $static_clearance = 0.1;
 $dynamic_clearance = 0.2;
 
@@ -81,31 +80,29 @@ module add_bottom_support_posts() {
     children();
 }
 
-xy_offset($xy_offset, 0.1) {
-  render_parts() {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-      add_top_screen_hole(pcb_offset+[8+3,9,0], 5.1) {
-        square([56.6-2*3, 37.4-3-9]);
-        add_top_screen_hole([-$epsilon, pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
-          translate([0,-$static_clearance]) {
-            square([pcb_offset[0]+51.4+0.4+$epsilon,15+2*$static_clearance]);
-          }
-          add_top_support_posts() {
-            add_screw_posts_in_corners("m3") {
-              box_top();
-            }
+render_parts() {
+  add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
+    circle(r=11.5/2);
+    add_top_screen_hole(pcb_offset+[8+3,9,0], 5.1) {
+      square([56.6-2*3, 37.4-3-9]);
+      add_top_screen_hole([-$epsilon, pcb_offset[1],0]+[0,pcb_depth-15,0], 0) {
+        translate([0,-$static_clearance]) {
+          square([pcb_offset[0]+51.4+0.4+$epsilon,15+2*$static_clearance]);
+        }
+        add_top_support_posts() {
+          add_screw_posts_in_corners("m3") {
+            box_top();
           }
         }
       }
     }
-    add_bottom_support_posts() {
-      add_screw_holes_in_corners("m3") {
-        box_bottom();
-      }
+  }
+  add_bottom_support_posts() {
+    add_screw_holes_in_corners("m3") {
+      box_bottom();
     }
-    add_button(8.4-$pcb_thickness) {
-      circle(r=11.5/2);
-    }
+  }
+  add_button(8.4-$pcb_thickness) {
+    circle(r=11.5/2);
   }
 }
