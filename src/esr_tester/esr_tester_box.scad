@@ -7,7 +7,9 @@ use <../lib/box_screen.scad>;
 use <../lib/screws.scad>;
 use <../lib/box_screw_post.scad>;
 use <../lib/negative_minkowski.scad>;
+use <../lib/xy_offset.scad>;
 include <../lib/box_render.scad>;
+
 
 pcb_width = 72.7;
 pcb_depth = 59.9;
@@ -19,8 +21,8 @@ $epsilon = 0.01;
 $fn=10;
 screw_type = "m3";
 $xy_offset = -0.15;
-$static_clearance = 0.2;
-$dynamic_clearance = 0.4;
+$static_clearance = 0.1;
+$dynamic_clearance = 0.2;
 
 $box_size = [pcb_width+4*$thickness,
              pcb_depth+6*$thickness+4*screw_posts_max_radius(screw_type),
@@ -79,25 +81,7 @@ module add_bottom_support_posts() {
     children();
 }
 
-module XY_offset(xy_offset) {
-  if (xy_offset < 0) {
-    negative_minkowski() {
-      children();
-      translate([0,0,-$epsilon/2]) {
-        cylinder(r = -xy_offset, h=1);
-      }
-    }
-  } else if (xy_offset > 0) {
-    minkowski() {
-      children();
-      translate([0,0,-$epsilon/2]) {
-        cylinder(r = xy_offset, h=1);
-      }
-    }
-  }
-}
-
-XY_offset($xy_offset) {
+xy_offset($xy_offset, 0.1) {
   render_parts() {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
       circle(r=11.5/2);
