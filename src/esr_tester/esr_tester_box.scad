@@ -20,8 +20,9 @@ $thickness = 2;
 $epsilon = 0.01;
 $fn=10;
 screw_type = "m3";
-$static_clearance = 0.1;
-$dynamic_clearance = 0.2;
+// Below clearances assume accurate printing that might require XY compensation.
+$static_clearance = 0.25;
+$dynamic_clearance = 0.35;
 
 $box_size = [pcb_width+4*$thickness,
              pcb_depth+6*$thickness+4*screw_posts_max_radius(screw_type),
