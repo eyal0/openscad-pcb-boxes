@@ -1,5 +1,4 @@
 #!python
-import itertools
 
 Import('env openscad2')
 printable_parts = ['button', 'top', 'bottom']
