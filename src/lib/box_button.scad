@@ -72,12 +72,14 @@ module add_top_button_hole(button_offset, button_height) {
   }
 }
 
+use <box_top.scad>;  // to put it in the right place for the box top
+
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
 // should be the button's 2D projection, it will be rounded to a
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
-module add_button(button_height) {
+module add_button(button_offset, button_height) {
   if (!$thickness) {
     echo("ERROR: $thickness is not set in add_button");
     UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -102,21 +104,27 @@ module add_button(button_height) {
     echo("ERROR: $epsilon is not set in add_button");
     UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
-  minkowski() {
-    sphere(r=$thickness);
-    linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
-      offset(r=-$thickness) {
-        children(0);
-      }
-    }
-  }
-  translate([0,0,-$thickness]) {
-    linear_extrude($thickness, convexity=10) {
-      offset(r=$thickness) {
-        offset(r=$dynamic_clearance) {
-          offset(r=$thickness) {
+  demo_box_top() {
+    translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
+      rotate([180,0,0]) {
+        minkowski() {
+          sphere(r=$thickness);
+          linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
             offset(r=-$thickness) {
               children(0);
+            }
+          }
+        }
+        translate([0,0,-$thickness]) {
+          linear_extrude($thickness, convexity=10) {
+            offset(r=$thickness) {
+              offset(r=$dynamic_clearance) {
+                offset(r=$thickness) {
+                  offset(r=-$thickness) {
+                    children(0);
+                  }
+                }
+              }
             }
           }
         }
@@ -125,29 +133,9 @@ module add_button(button_height) {
   }
 }
 
-module print_button() {
-  if (!$thickness) {
-    echo("ERROR: $thickness is not set in print_button");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  translate([0,0,$thickness]) {
+module render_box_button(style) {
+  if (style == "demo" || style == "print") {
     children();
-  }
-}
-
-use <box_top.scad>;
-
-module demo_button(button_offset, button_height) {
-  if (!$thickness) {
-    echo("ERROR: $thickness is not set in print_button");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  demo_box_top() {
-    translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
-      rotate([180,0,0]) {
-        children();
-      }
-    }
   }
 }
 

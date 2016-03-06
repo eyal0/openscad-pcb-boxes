@@ -1,6 +1,7 @@
 #!python
 
 Import('env openscad2')
+
 printable_parts = ['button', 'top', 'bottom']
 all_parts = ['demo'] + printable_parts
 

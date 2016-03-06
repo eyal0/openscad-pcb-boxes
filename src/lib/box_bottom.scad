@@ -40,6 +40,12 @@ module demo_box_bottom() {
   children();
 }
 
+module render_box_bottom(style) {
+  if (style == "print" || style == "demo") {
+    children();
+  }
+}
+
 //box_bottom($box_size=[100,50,20], $thickness=3, $static_clearance=0.2);
 //demo_box_bottom($box_size=[100,50,20], $thickness=3, $static_clearance=0.2) box_bottom();
 //print_box_bottom($box_size=[100,50,20], $thickness=3, $static_clearance=0.2) box_bottom();

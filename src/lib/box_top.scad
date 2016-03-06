@@ -55,6 +55,26 @@ module demo_box_top() {
   }
 }
 
+module render_box_top(style) {
+  if (style == "print") {
+    children();
+  }
+  if (style == "demo") {
+    if (!$thickness) {
+      echo("ERROR: $thickness not defined in demo_box_top");
+      UNDEFINED_DYNAMIC_VARIABLE_ERROR();
+    }
+    if (!$box_size) {
+      echo("ERROR: $box_size not defined in demo_box_top");
+      UNDEFINED_DYNAMIC_VARIABLE_ERROR();
+    }
+    translate([0, $box_size[1], $box_size[2]]) {
+      rotate([180,0,0]) {
+        children();
+      }
+    }
+  }
+}
 
 //box_top($box_size=[50,40,10], $epsilon=0.01, $thickness=3, $fn=50);
 //demo_box_top($thickness=3, $box_size=[50,40,10]) box_top([50,100,20], $epsilon=0.01, $fn=50);
