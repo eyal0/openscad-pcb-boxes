@@ -72,14 +72,25 @@ module add_bottom_support_posts() {
     children();
 }
 
+// Make a 2D equilateral triangle centered, pointing up
+module triangle_up(triangle_side) {
+  triangle_height = triangle_side*sqrt(3)/2;
+  polygon(points=[[               0,  triangle_height*2/3],
+                  [-triangle_side/2, -triangle_height*1/3],
+                  [ triangle_side/2, -triangle_height*1/3]],
+          paths=[[0,2,1]]);
+}
+
 if ($group == "list") {
   echo("Printable: top, bottom, button");
   echo("All: demo, top, bottom, button");
 }
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print") {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-      circle(r=11.5/2);
+    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 10 /* TODO CHECK THIS */) {
+      rotate(-90) {
+        triangle_up(14);
+      }
       add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9) {
         square([71.1-2*$thickness, 24-2*$thickness]);
         add_top_support_posts() {
@@ -100,10 +111,12 @@ if ($group == "demo" || $group == "bottom") {
     }
   }
 }
-if ($group == "demo" || $group == "button") {
+if ($group == "demo" || $group == "right") {
   render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
-      circle(r=11.5/2);
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 10 /* TODO CHECK THIS */) {
+      rotate(-90) {
+        triangle_up(10);
+      }
     }
   }
 }

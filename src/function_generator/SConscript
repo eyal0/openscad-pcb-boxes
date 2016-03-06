@@ -2,7 +2,7 @@
 
 Import('env openscad2')
 
-printable_parts = ['button', 'top', 'bottom']
+printable_parts = ['top', 'bottom', 'right']
 all_parts = ['demo'] + printable_parts
 
 for part in all_parts:
