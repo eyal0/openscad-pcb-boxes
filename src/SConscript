@@ -27,6 +27,7 @@ def openscad2(target, source, path):
   #sources = [os.path.join(path, s) for s in sources]
   for t in targets:
     for s in sources:
+      print("target %s from source %s" % (t, s))
       env.Openscad(target=t, source=s)
 
 openscad = Builder(
