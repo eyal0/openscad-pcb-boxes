@@ -6,8 +6,6 @@ use <../lib/box_support_post.scad>;
 use <../lib/box_screen.scad>;
 use <../lib/screws.scad>;
 use <../lib/box_screw_post.scad>;
-use <../lib/negative_minkowski.scad>;
-use <../lib/xy_offset.scad>;
 
 pcb_width = 72.7;
 pcb_depth = 59.9;
@@ -19,8 +17,8 @@ $epsilon = 0.01;
 $fn=10;
 screw_type = "m3";
 // Below clearances assume accurate printing that might require XY compensation.
-$static_clearance = 0.25;
-$dynamic_clearance = 0.35;
+$static_clearance = 0.2;
+$dynamic_clearance = 0.3;
 
 $box_size = [pcb_width+4*$thickness,
              pcb_depth+6*$thickness+4*screw_posts_max_radius(screw_type),
@@ -35,54 +33,50 @@ function upsidedown_rotate(angle) = -angle;
 
 module add_screw_posts_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], "m3",  90)
-  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], "m3",  90)
-  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], "m3", -90)
-  add_screw_post([               delta_side,                delta_side, 0], "m3", -90)
+  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type,  90)
+  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], screw_type,  90)
+  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], screw_type, -90)
+  add_screw_post([               delta_side,                delta_side, 0], screw_type, -90)
     children();
 }
 
 module add_screw_holes_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side, $box_size[1] - delta_side, 0]), "m3", upsidedown_rotate( 90))
-  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side,                delta_side, 0]), "m3", upsidedown_rotate( 90))
-  add_screw_hole(upsidedown_offset([               delta_side, $box_size[1] - delta_side, 0]), "m3", upsidedown_rotate(-90))
-  add_screw_hole(upsidedown_offset([               delta_side,                delta_side, 0]), "m3", upsidedown_rotate(-90))
+  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side, $box_size[1] - delta_side, 0]), screw_type, upsidedown_rotate( 90))
+  add_screw_hole(upsidedown_offset([$box_size[0] - delta_side,                delta_side, 0]), screw_type, upsidedown_rotate( 90))
+  add_screw_hole(upsidedown_offset([               delta_side, $box_size[1] - delta_side, 0]), screw_type, upsidedown_rotate(-90))
+  add_screw_hole(upsidedown_offset([               delta_side,                delta_side, 0]), screw_type, upsidedown_rotate(-90))
     children();
 }
 
+pcb_hole_diameter = 3;
+pcb_holes = [[                                1.1,  1.4, 0],
+             [pcb_width - pcb_hole_diameter - 1.1,  1.4, 0],
+             [                                1.1, 38.9, 0],
+             [pcb_width - pcb_hole_diameter - 1.1,   39, 0]];
+
 module add_top_support_posts() {
-  pcb_hole_diameter = 3;
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  top_left  =   [                                1.1,  1.4, 0];
-  top_right =   [pcb_width - pcb_hole_diameter - 1.1,  1.4, 0];
-  bottom_left = [                                1.1, 38.9, 0];
-  bottom_right =[pcb_width - pcb_hole_diameter - 1.1,   39, 0];
-  add_top_support_post(pcb_offset+ top_left     + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+ top_right    + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+ bottom_left  + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset+ bottom_right + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset + pcb_holes[0] + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset + pcb_holes[1] + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset + pcb_holes[2] + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter)
     children();
 }
 
 module add_bottom_support_posts() {
-  pcb_hole_diameter = 3;
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  top_left  =   [                                1.1,  1.4, 0];
-  top_right =   [pcb_width - pcb_hole_diameter - 1.1,  1.4, 0];
-  bottom_left = [                                1.1, 38.9, 0];
-  bottom_right =[pcb_width - pcb_hole_diameter - 1.1,   39, 0];
-  add_bottom_support_post(upsidedown_offset(pcb_offset + top_left + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset + top_right + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset + bottom_left + pcb_hole_center_offset), pcb_hole_diameter)
-  add_bottom_support_post(upsidedown_offset(pcb_offset + bottom_right + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + pcb_holes[0] + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + pcb_holes[1] + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + pcb_holes[2] + pcb_hole_center_offset), pcb_hole_diameter)
+  add_bottom_support_post(upsidedown_offset(pcb_offset + pcb_holes[3] + pcb_hole_center_offset), pcb_hole_diameter)
     children();
 }
 
 if ($group == "list") {
   echo("Printable: top, bottom, button");
   echo("All: demo, top, bottom, button");
- }
+}
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print") {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
@@ -94,7 +88,7 @@ if ($group == "demo" || $group == "top") {
             square([pcb_offset[0]+51.4+0.4+$epsilon,15+2*$static_clearance]);
           }
           add_top_support_posts() {
-            add_screw_posts_in_corners("m3") {
+            add_screw_posts_in_corners(screw_type) {
               box_top();
             }
           }
@@ -106,7 +100,7 @@ if ($group == "demo" || $group == "top") {
 if ($group == "demo" || $group == "bottom") {
   render_box_bottom($group == "demo" ? "demo" : "print") {
     add_bottom_support_posts() {
-      add_screw_holes_in_corners("m3") {
+      add_screw_holes_in_corners(screw_type) {
         box_bottom();
       }
     }

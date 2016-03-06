@@ -1,0 +1,19 @@
+#!python
+
+Import('env openscad2')
+
+printable_parts = ['button', 'top', 'bottom']
+all_parts = ['demo'] + printable_parts
+
+for part in all_parts:
+  openscad2(target='function_generator_' + part,
+               source=['function_generator_box'], path="src/function_generator")
+
+env.Alias('function_generator',
+          ['function_generator_' + part + suffix
+           for part in all_parts
+           for suffix in ['.png', '.stl']])
+
+env.Alias('function_generator_printable_parts',
+          ['function_generator_' + part + '.stl'
+           for part in printable_parts])
