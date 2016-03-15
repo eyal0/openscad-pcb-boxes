@@ -1,5 +1,5 @@
 #!python
-openscad_binary = 'cpulimit -l 50 -- openscad-nightly'
+openscad_binary = 'openscad'
 
 import os
 import re
