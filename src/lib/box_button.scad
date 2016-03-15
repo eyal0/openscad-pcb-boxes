@@ -1,3 +1,5 @@
+use <upsidedown.scad>;
+
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
 // should be the button's 2D projection, it will be rounded to a
@@ -111,7 +113,9 @@ module add_button(button_offset, button_height) {
           sphere(r=$thickness);
           linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
             offset(r=-$thickness) {
-              children(0);
+              upsidedown_polygon() { // because it's upsidedown from the top
+                children(0);
+              }
             }
           }
         }
@@ -121,7 +125,9 @@ module add_button(button_offset, button_height) {
               offset(r=$dynamic_clearance) {
                 offset(r=$thickness) {
                   offset(r=-$thickness) {
-                    children(0);
+                    upsidedown_polygon() { // because it's upsidedown from the top
+                      children(0);
+                    }
                   }
                 }
               }
@@ -151,10 +157,11 @@ $box_size = [100,50,30];
 $fn = 50;
 $dynamic_clearance = 0.4;
 triangle_height = 10;
-demo_box_top() {
+render_box_top("demo") {
   add_top_button_hole([20,20,0], 5) {
+    rotate(20)
     polygon(points=[
-              [-triangle_height/1.5, 0],
+              [-triangle_height, 0],
               [triangle_height/3, triangle_height*sqrt(3)/3],
               [triangle_height/3, -triangle_height*sqrt(3)/3]],
             paths=[
@@ -165,10 +172,11 @@ demo_box_top() {
   }
 }
 
-demo_button([20,20,0], 5) {
-  add_button(5) {
+render_box_button("demo") {
+  add_button([20,20,0], 5) {
+    rotate(20)
     polygon(points=[
-              [-triangle_height/1.5, 0],
+              [-triangle_height, 0],
               [triangle_height/3, triangle_height*sqrt(3)/3],
               [triangle_height/3, -triangle_height*sqrt(3)/3]],
             paths=[

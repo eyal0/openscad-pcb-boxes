@@ -1,3 +1,5 @@
+use <upsidedown.scad>;
+
 // post_center_offset should be relative to bottom-left corner of the
 // box top when upside-down.
 // $pcb_top_clearance is the height between the top of the PCB and the
@@ -77,7 +79,7 @@ module add_bottom_support_post(post_center_offset, pcb_hole_diameter) {
   post_height = $box_size[2] -
     ($thickness + $pcb_top_clearance - $static_clearance) // post height from the top
     - $pcb_thickness
-    - $static_clearance - post_center_offset[2];
+    - $static_clearance - upsidedown_offset(post_center_offset)[2];
   // Depth of hole to accept the stub.
   stub_hole_height = $thickness;
 
@@ -86,7 +88,7 @@ module add_bottom_support_post(post_center_offset, pcb_hole_diameter) {
   stub_radius = pcb_hole_diameter/2 - $static_clearance + $static_clearance;
   post_radius = stub_radius + $thickness;
 
-  translate(post_center_offset) {
+  translate(upsidedown_offset(post_center_offset)) {
     difference() {
       // post
       cylinder(h=post_height, r=post_radius);

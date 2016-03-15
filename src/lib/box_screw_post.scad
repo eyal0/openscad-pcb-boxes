@@ -1,7 +1,9 @@
 use <screws.scad>;
+use <upsidedown.scad>;
 
 function screw_hole_post_radius(screw_type) = get_screw_param(screw_type, "screw_head_diameter")/2 + $static_clearance + $thickness;
 
+// nut_opening_rotation 0 is to the right when viewed above.  positive values rotate positive y.
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
 module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation) {
   if (!$thickness) {
@@ -30,15 +32,15 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation) {
   difference() {
     union() {
       children();
-      translate(screw_center_offset) {
-        rotate(nut_opening_rotation) {
+      translate(upsidedown_offset(screw_center_offset)) {
+        rotate(upsidedown_angle(-90+nut_opening_rotation)) {
           // post
           cylinder(h=post_height, r=post_radius);
         }
       }
     }
-    translate(screw_center_offset) {
-      rotate(nut_opening_rotation) {
+    translate(upsidedown_offset(screw_center_offset)) {
+      rotate(upsidedown_angle(-90+nut_opening_rotation)) {
         translate([0,0,-$epsilon]) {
           // head hole
           cylinder(h=head_hole_height+$epsilon,
@@ -64,6 +66,7 @@ function screw_posts_max_radius(screw_type) =
   screw_hole_post_radius(screw_type) :
   screw_post_radius(screw_type);
 
+// nut_opening_rotation 0 is to the right when viewed above.  positive values rotate toward positive y.
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
 module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
   if (!$thickness) {
@@ -112,7 +115,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
             children();
           }
         }
-        rotate(nut_opening_rotation) {
+        rotate(-90+nut_opening_rotation) {
           union() {
             // post
             cylinder(h=post_height, r=post_radius);
@@ -125,7 +128,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
           }
         }
       }
-      rotate(nut_opening_rotation) {
+      rotate(-90+nut_opening_rotation) {
         difference() { // difference so that the holes don't go through the box.
           union() {
             // screw hole
@@ -170,7 +173,7 @@ $thickness = 2;
 $static_clearance = 0.25;
 $dynamic_clearance = 0.35;
 $epsilon = 0.01;
-$box_size = [30,30,20];
-demo_box_top() add_screw_post([$box_size[0]/2,$box_size[1]/2,0], "m3", 5){ %box_top(); }
-demo_box_bottom() add_screw_hole([$box_size[0]/2,$box_size[1]-$box_size[1]/2,0], "m3", -5){%box_bottom();}
+$box_size = [30,30,50];
+render_box_top("demo") add_screw_post([$box_size[0]*5/7,$box_size[1]*4/7,0], "m3", 20){ box_top(); }
+render_box_bottom("demo") add_screw_hole([$box_size[0]*5/7,$box_size[1]*4/7,0], "m3", 10){ box_bottom();}
 */

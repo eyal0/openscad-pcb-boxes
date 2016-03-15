@@ -1,5 +1,5 @@
 #!python
-openscad_binary = 'openscad'
+openscad_binary = 'openscad-nightly'
 
 import os
 import re
