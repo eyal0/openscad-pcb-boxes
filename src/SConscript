@@ -1,5 +1,5 @@
 #!python
-openscad_binary = 'openscad-nightly'
+openscad_binary = 'cpulimit -l 50 -- openscad-nightly'
 
 import os
 import re
@@ -12,6 +12,7 @@ def openscad(target, source, env):
               ' -D \'$fn=' + str(env['fn']) + '\'' +
               ' --viewall --autocenter --render' +
                ' -o ' + str(target[0]) + ' ' + str(source[0]))
+    print(command)
     os.system(command)
 
 def openscad2(target, source, path):
