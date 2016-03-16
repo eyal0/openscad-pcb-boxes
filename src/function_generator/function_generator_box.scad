@@ -63,12 +63,12 @@ module add_bottom_support_posts() {
     children();
 }
 
-// Make a 2D equilateral triangle centered, pointing up
+// Make a 2D equilateral triangle centered, pointing up (which is along negative y)
 module triangle_up(triangle_side) {
   triangle_height = triangle_side*sqrt(3)/2;
-  polygon(points=[[               0,  triangle_height*2/3],
-                  [-triangle_side/2, -triangle_height*1/3],
-                  [ triangle_side/2, -triangle_height*1/3]],
+  polygon(points=[[               0, -triangle_height*2/3],
+                  [-triangle_side/2,  triangle_height*1/3],
+                  [ triangle_side/2,  triangle_height*1/3]],
           paths=[[0,2,1]]);
 }
 
@@ -82,13 +82,13 @@ button_thickness = 1;
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print") {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 10, $thickness=button_thickness) {
-      rotate(-90) triangle_up(6);
+      rotate(90) triangle_up(6);
       add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 10, $thickness=button_thickness) {
-        rotate(90) triangle_up(6);
+        rotate(-90) triangle_up(6);
         add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 10, $thickness=button_thickness) {
           rotate(0) triangle_up(6);
           add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 10, $thickness=button_thickness) {
-            rotate(180)  triangle_up(6);
+            rotate(180) triangle_up(6);
             add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 10, $thickness=button_thickness) {
               circle(r=3);
               render(convexity = 10) add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9) {
