@@ -162,18 +162,3 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
     }
   }
 }
-
-// For testing, uncomment.
-
-/*
-use <box_top.scad>;
-use <box_bottom.scad>;
-$fn = 60;
-$thickness = 2;
-$static_clearance = 0.25;
-$dynamic_clearance = 0.35;
-$epsilon = 0.01;
-$box_size = [30,30,50];
-render_box_top("demo") add_screw_post([$box_size[0]*5/7,$box_size[1]*4/7,0], "m3", 20){ box_top(); }
-render_box_bottom("demo") add_screw_hole([$box_size[0]*5/7,$box_size[1]*4/7,0], "m3", 10){ box_bottom();}
-*/
