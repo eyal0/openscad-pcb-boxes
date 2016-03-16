@@ -1,3 +1,4 @@
+include <../lib/globals.scad>;
 use <../lib/box_top.scad>;
 use <../lib/box_bottom.scad>;
 
@@ -12,13 +13,7 @@ pcb_depth = 59.9;
 $pcb_thickness = 1.1;
 $pcb_top_clearance = 12.3-$pcb_thickness;
 pcb_bottom_clearance = 4;
-$thickness = 2;
-$epsilon = 0.01;
-$fn=10;
 screw_type = "m3";
-// Below clearances assume accurate printing that might require XY compensation.
-$static_clearance = 0.2;
-$dynamic_clearance = 0.3;
 
 $box_size = [pcb_width+4*$thickness,
              pcb_depth+6*$thickness+4*screw_posts_max_radius(screw_type),

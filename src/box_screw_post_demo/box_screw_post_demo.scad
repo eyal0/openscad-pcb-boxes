@@ -1,15 +1,10 @@
+include <../lib/globals.scad>;
 use <../lib/box_top.scad>;
 use <../lib/box_bottom.scad>;
 
 use <../lib/box_screw_post.scad>;
 
-$thickness = 2;
-$epsilon = 0.01;
-$fn=10;
 screw_type = "m3";
-// Below clearances assume accurate printing that might require XY compensation.
-$static_clearance = 0.25;
-$dynamic_clearance = 0.35;
 
 $box_size = [30,30,20];
 
