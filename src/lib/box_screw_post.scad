@@ -101,10 +101,34 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation) {
 
   fitting_hex_height = post_height + screw("nut_thickness")/2; // from above without the clearance
 
-  nut_opening_height = screw("nut_width") + 2*$dynamic_clearance;
   nut_opening_width = screw("nut_width")+2*$dynamic_clearance;
-  nut_pit_height = screw("nut_thickness")/2;
-  nut_dome_height = screw("nut_thickness")/2;
+
+  function range(least, most, value) = max(least, min(value, most));
+
+  nut_pocket_total = post_height-2*$thickness-2*$static_clearance;
+
+  nut_opening_height0 = screw("nut_thickness") + 2*$dynamic_clearance;
+  //echo("nut_opening_height0 is ", nut_opening_height0);
+  if (nut_pocket_total - nut_opening_height0 < 0) {
+    echo("ERROR: Box not tall enough for nut opening.");
+    BOX_NOT_TALL_ENOUGH_FOR_NUT_OPENING();
+  }
+
+  nut_pit_height = range(0, screw("nut_thickness")/2,
+                         nut_pocket_total - nut_opening_height0);
+  echo("nut_pit_height is", nut_pit_height);
+
+  nut_opening_height1 = range(nut_opening_height0, screw("nut_width") + 2*$dynamic_clearance,
+                              nut_pocket_total - nut_pit_height);
+  //echo("nut_opening_height1 is", nut_opening_height1);
+
+  nut_dome_height = range(0, screw("nut_thickness")/2,
+                          nut_pocket_total - nut_opening_height1 - nut_pit_height);
+  echo("nut_dome_height is", nut_dome_height);
+
+  nut_opening_height = post_height-2*$thickness-2*$static_clearance - nut_pit_height - nut_dome_height;
+  echo("nut_opening_height is", nut_opening_height);
+
   nut_pocket_height = 2*$static_clearance + nut_pit_height + nut_dome_height + nut_opening_height;
   children();
   translate(post_center_offset) {
