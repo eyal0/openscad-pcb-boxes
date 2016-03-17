@@ -2,7 +2,7 @@
 import itertools
 
 Import('env openscad2')
-printable_parts = ['top', 'button']
+printable_parts = ['top', 'button', 'bottom']
 all_parts = ['demo'] + printable_parts
 
 for part in all_parts:
