@@ -7,18 +7,21 @@ import platform
 import subprocess
 
 if "Windows" in platform.platform():
-  openscad_binary = '"C:\Program Files\OpenSCAD\openscad.exe"'
+  windows = True
+if windows:
+  openscad_binary = 'C:\Program Files\OpenSCAD\openscad.exe'
 else:
   openscad_binary = "openscad-nightly"
 
 def openscad(target, source, env):
   group = str(target[0]).split("_")[-1].split(".")[0]
   for t in target:
-    command = (openscad_binary +
-              ' -D \'$group="' + group + '"\'' +
-              ' -D \'$fn=' + str(env['fn']) + '\'' +
-              ' --viewall --autocenter --render' +
-               ' -o ' + str(target[0]) + ' ' + str(source[0]))
+    command = [openscad_binary,
+              '-D', ('$group={0}"' + group + '{0}"').format("" if windows else ""),
+              '-D', '$fn=' + str(env['fn']),
+              '--viewall', '--autocenter', '--render',
+              '-o', str(target[0]),
+              str(source[0])]
     print command
     subprocess.call(command)
 
