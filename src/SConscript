@@ -12,10 +12,10 @@ else:
   openscad_binary = "openscad-nightly"
 
 def openscad(target, source, env):
-  part = str(target[0]).split("_")[-1].split(".")[0]
+  group = str(target[0]).split("_")[-1].split(".")[0]
   for t in target:
     command = (openscad_binary +
-              ' -D \'$part="' + part + '"\'' +
+              ' -D \'$group="' + group + '"\'' +
               ' -D \'$fn=' + str(env['fn']) + '\'' +
               ' --viewall --autocenter --render' +
                ' -o ' + str(target[0]) + ' ' + str(source[0]))
@@ -54,6 +54,5 @@ scad_scan = Scanner(function = scad_scan, skeys = ['.scad'])
 env.Append(SCANNERS = scad_scan)
 
 Export('env openscad2')
-
-conscripts = [dir + '/SConscript' for dir in ['esr_tester', 'holes_demo', 'function_generator']]
+conscripts = [dir + '/SConscript' for dir in ['esr_tester', 'holes_demo', 'function_generator', 'box_screw_post_demo', 'box_button_demo']]
 SConscript(conscripts)

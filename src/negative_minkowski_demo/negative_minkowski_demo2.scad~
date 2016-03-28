@@ -1,0 +1,30 @@
+step = 0.1;
+$fn = 60;
+
+module XY_offset(first_offset, second_offset) {
+  hull() {
+    for(z=[0:step:25]) {
+      echo(z);
+      translate([0,0,z]) {
+        linear_extrude(step) {
+          offset(second_offset) {
+            offset(first_offset) {
+              projection(cut=true) {
+                translate([0,0,-z]) {
+                  children();
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+XY_offset(-2,2) {
+  difference() {
+    cylinder(r=10,h=20);
+    translate([-2.5,-2.5,-0.01]) cube([5,5,5]);
+  }
+}

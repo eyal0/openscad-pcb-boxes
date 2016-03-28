@@ -1,3 +1,5 @@
+use <upsidedown.scad>;
+
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
 // should be the button's 2D projection, it will be rounded to a
@@ -72,12 +74,14 @@ module add_top_button_hole(button_offset, button_height) {
   }
 }
 
+use <box_top.scad>;  // to put it in the right place for the box top
+
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
 // should be the button's 2D projection, it will be rounded to a
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
-module add_button(button_height) {
+module add_button(button_offset, button_height) {
   if (!$thickness) {
     echo("ERROR: $thickness is not set in add_button");
     UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -102,21 +106,31 @@ module add_button(button_height) {
     echo("ERROR: $epsilon is not set in add_button");
     UNDEFINED_DYNAMIC_VARIABLE_ERROR();
   }
-  minkowski() {
-    sphere(r=$thickness);
-    linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
-      offset(r=-$thickness) {
-        children(0);
-      }
-    }
-  }
-  translate([0,0,-$thickness]) {
-    linear_extrude($thickness, convexity=10) {
-      offset(r=$thickness) {
-        offset(r=$dynamic_clearance) {
-          offset(r=$thickness) {
+  demo_box_top() {
+    translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
+      rotate([180,0,0]) {
+        minkowski() {
+          sphere(r=$thickness);
+          linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
             offset(r=-$thickness) {
-              children(0);
+              upsidedown_polygon() { // because it's upsidedown from the top
+                children(0);
+              }
+            }
+          }
+        }
+        translate([0,0,-$thickness]) {
+          linear_extrude($thickness, convexity=10) {
+            offset(r=$thickness) {
+              offset(r=$dynamic_clearance) {
+                offset(r=$thickness) {
+                  offset(r=-$thickness) {
+                    upsidedown_polygon() { // because it's upsidedown from the top
+                      children(0);
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -125,68 +139,8 @@ module add_button(button_height) {
   }
 }
 
-module print_button() {
-  if (!$thickness) {
-    echo("ERROR: $thickness is not set in print_button");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  translate([0,0,$thickness]) {
+module render_box_button(style) {
+  if (style == "demo" || style == "print") {
     children();
   }
 }
-
-use <box_top.scad>;
-
-module demo_button(button_offset, button_height) {
-  if (!$thickness) {
-    echo("ERROR: $thickness is not set in print_button");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  demo_box_top() {
-    translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
-      rotate([180,0,0]) {
-        children();
-      }
-    }
-  }
-}
-
-// Uncomment for testing.
-
-/*
-$epsilon = 0.01;
-$pcb_top_clearance = 10;
-$pcb_thickness = 10;
-$thickness = 2;
-$static_clearance = 0.2;
-$box_size = [100,50,30];
-$fn = 50;
-$dynamic_clearance = 0.4;
-triangle_height = 10;
-demo_box_top() {
-  add_top_button_hole([20,20,0], 5) {
-    polygon(points=[
-              [-triangle_height/1.5, 0],
-              [triangle_height/3, triangle_height*sqrt(3)/3],
-              [triangle_height/3, -triangle_height*sqrt(3)/3]],
-            paths=[
-              [0,1,2]
-              ]
-      );
-    box_top();
-  }
-}
-
-demo_button([20,20,0], 5) {
-  add_button(5) {
-    polygon(points=[
-              [-triangle_height/1.5, 0],
-              [triangle_height/3, triangle_height*sqrt(3)/3],
-              [triangle_height/3, -triangle_height*sqrt(3)/3]],
-            paths=[
-              [0,1,2]
-              ]
-      );
-  }
-}
-*/

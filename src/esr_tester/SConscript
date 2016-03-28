@@ -1,7 +1,7 @@
 #!python
-import itertools
 
 Import('env openscad2')
+
 printable_parts = ['button', 'top', 'bottom']
 all_parts = ['demo'] + printable_parts
 
@@ -10,8 +10,9 @@ for part in all_parts:
                source=['esr_tester_box'], path="src/esr_tester")
 
 env.Alias('esr_tester',
-          list(itertools.chain([[part + '.stl', part + '.png']
-                              for part in all_parts])))
+          ['esr_tester_' + part + suffix
+           for part in all_parts
+           for suffix in ['.png', '.stl']])
 
 env.Alias('esr_tester_printable_parts',
           ['esr_tester_' + part + '.stl'
