@@ -1,8 +1,15 @@
 #!python
-openscad_binary = 'openscad-nightly'
+
 
 import os
 import re
+import platform
+import subprocess
+
+if "Windows" in platform.platform():
+  openscad_binary = '"C:\Program Files\OpenSCAD\openscad.exe"'
+else:
+  openscad_binary = "openscad-nightly"
 
 def openscad(target, source, env):
   part = str(target[0]).split("_")[-1].split(".")[0]
@@ -12,7 +19,8 @@ def openscad(target, source, env):
               ' -D \'$fn=' + str(env['fn']) + '\'' +
               ' --viewall --autocenter --render' +
                ' -o ' + str(target[0]) + ' ' + str(source[0]))
-    os.system(command)
+    print command
+    subprocess.call(command)
 
 def openscad2(target, source, path):
   if '.' in str(target):
