@@ -6,8 +6,7 @@ import re
 import platform
 import subprocess
 
-if "Windows" in platform.platform():
-  windows = True
+windows = "Windows" in platform.platform()
 if windows:
   openscad_binary = 'C:\Program Files\OpenSCAD\openscad.exe'
 else:
