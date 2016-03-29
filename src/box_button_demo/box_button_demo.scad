@@ -18,7 +18,7 @@ module arrow_up() {
       );
 }
 
-$group = "bottom";
+$group = "demo";
 if ($group == "list") {
   echo("Printable: top, button, bottom");
   echo("All: demo, top, button, bottom");
