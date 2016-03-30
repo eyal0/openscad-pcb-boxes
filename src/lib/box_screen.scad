@@ -77,12 +77,12 @@ $pcb_top_clearance = 10;
 $pcb_thickness = 10;
 $thickness = 2;
 $static_clearance = 0.2;
-$box_size = [100,50,30];
+$box_size = [20,20,20];
 $fn = 30;
 $dynamic_clearance = 0.4;
 triangle_height = 10;
 demo_box_top() {
-  add_top_screen_hole([20,20,0], 5) {
+  add_top_screen_hole([10,10,0], 5) {
     //polygon(points=[
     //          [-triangle_height/1.5, 0],
     //          [triangle_height/3, triangle_height*sqrt(3)/3],

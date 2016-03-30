@@ -17,9 +17,15 @@ module box_top() {
   inside_dimensions = $box_size-[2*$thickness, 2*$thickness, $thickness];
   translate([$thickness, $thickness, $thickness]) {
     difference () {
-      minkowski () {
-        sphere(r=$thickness);
-        cube(inside_dimensions);
+      hull() {
+        translate([                   0,                   0,                   0]) sphere(r=$thickness);
+        translate([                   0,                   0,inside_dimensions[2]]) sphere(r=$thickness);
+        translate([                   0,inside_dimensions[1],                   0]) sphere(r=$thickness);
+        translate([                   0,inside_dimensions[1],inside_dimensions[2]]) sphere(r=$thickness);
+        translate([inside_dimensions[0],                   0,                   0]) sphere(r=$thickness);
+        translate([inside_dimensions[0],                   0,inside_dimensions[2]]) sphere(r=$thickness);
+        translate([inside_dimensions[0],inside_dimensions[1],                   0]) sphere(r=$thickness);
+        translate([inside_dimensions[0],inside_dimensions[1],inside_dimensions[2]]) sphere(r=$thickness);
       }
       cube(inside_dimensions+[0,0,$epsilon]);
       translate([-$thickness-$epsilon,
