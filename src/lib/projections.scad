@@ -14,43 +14,6 @@ $box_size = [pcb_width+4*$thickness,
              $pcb_top_clearance+$pcb_thickness+pcb_bottom_clearance+2*$thickness];
 $thickness = 2;
 
-
-
-module bottom_projection() {
-  projection(cut = true) translate([0,0,-$thickness/2]) children();
-}
-
-module top_projection() {
-  projection(cut = true) translate([0,0,-$box_size[2]+$thickness/2]) children();
-}
-
-module front_projection() {
-  projection(cut = true) translate([0,$box_size[2],-$thickness/2]) rotate([90,0,0]) children();
-}
-
-module back_projection() {
-  projection(cut = true) translate([0,$box_size[2],-$box_size[1]+$thickness/2]) rotate([90,0,0]) children();
-}
-
-module left_projection() {
-  projection(cut = true)
-  translate([0,0,$thickness/2])
-  rotate([0,90,0])
-  children();
-}
-
-module right_projection() {
-  projection(cut = true)
-  translate([0,0,$box_size[0]-$thickness/2])
-  rotate([0,90,0])
-  children();
-}
-
-module projections(stl_file) {
-  bottom_projection() import(stl_file);
-  
-}
-
 module all_rotations(space) {
   projection(cut=true)
   translate([0,0,-$thickness/2]) {
