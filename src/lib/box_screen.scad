@@ -41,7 +41,7 @@ module add_top_screen_hole(screen_offset, screen_height) {
     translate(screen_offset) {
       intersection() {
         translate([0,0,$thickness]) {
-          slice_count = floor($fn/2);
+          slice_count = floor($fn/4);
           for (i = [0 : slice_count-1]) {
             theta_bottom = i*90/slice_count;
             theta_top = theta_bottom + 90/slice_count;
@@ -54,7 +54,6 @@ module add_top_screen_hole(screen_offset, screen_height) {
               linear_extrude(slice_thickness) {
                 difference() {
                   slice_radius = (slice_top_radius+slice_bottom_radius)/2;
-                  //echo(slice_top_radius,slice_bottom_radius,(slice_bottom_radius-slice_top_radius)*(slice_bottom_radius-slice_top_radius)+slice_thickness*slice_thickness);
                   offset(r=$thickness+$epsilon) children(0);
                   offset(r=$thickness-slice_radius) children(0);
                 }
@@ -72,33 +71,3 @@ module add_top_screen_hole(screen_offset, screen_height) {
     }
   }
 }
-
-// Uncomment for testing.
-
-/*
-use <box_top.scad>;
-
-$epsilon = 0.01;
-$pcb_top_clearance = 10;
-$pcb_thickness = 10;
-$thickness = 2;
-$static_clearance = 0.2;
-$box_size = [20,20,20];
-$fn = 30;
-$dynamic_clearance = 0.4;
-triangle_height = 10;
-demo_box_top() {
-  add_top_screen_hole([10,10,0], 5) {
-    //polygon(points=[
-    //          [-triangle_height/1.5, 0],
-    //          [triangle_height/3, triangle_height*sqrt(3)/3],
-    //          [triangle_height/3, -triangle_height*sqrt(3)/3]],
-    //        paths=[
-    //          [0,1,2]
-    //          ]
-    //  );
-    square([3,3]);
-    box_top();
-  }
-}
-*/
