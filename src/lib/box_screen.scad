@@ -39,28 +39,28 @@ module add_top_screen_hole(screen_offset, screen_height) {
       children([1:$children-1]);
     }
     translate(screen_offset) {
-      intersection() {
-        translate([0,0,$thickness]) {
-          slice_count = floor($fn/4);
-          for (i = [0 : slice_count-1]) {
-            theta_bottom = i*90/slice_count;
-            theta_top = theta_bottom + 90/slice_count;
-            slice_bottom_height = sin(theta_bottom)*$thickness;
-            slice_top_height = sin(theta_top)*$thickness;
-            slice_thickness = slice_top_height-slice_bottom_height;
-            slice_bottom_radius = cos(theta_bottom)*$thickness;
-            slice_top_radius = cos(theta_top)*$thickness;
-            translate([0,0,-slice_bottom_height]) {
-              linear_extrude(slice_thickness) {
-                difference() {
-                  slice_radius = (slice_top_radius+slice_bottom_radius)/2;
-                  offset(r=$thickness+$epsilon) children(0);
-                  offset(r=$thickness-slice_radius) children(0);
-                }
+      union() {
+        slice_count = floor($fn/4);
+        for (i = [0 : slice_count-1]) {
+          theta_bottom = i*90/slice_count;
+          theta_top = theta_bottom + 90/slice_count;
+          slice_bottom_height = (1-cos(theta_bottom))*$thickness;
+          slice_top_height = (1-cos(theta_top))*$thickness;
+          slice_thickness = slice_top_height-slice_bottom_height;
+          slice_bottom_offset = (1-sin(theta_bottom))*$thickness;
+          slice_top_offset = (1-sin(theta_top))*$thickness;
+          slice_offset = (slice_top_offset+slice_bottom_offset)/2;
+          translate([0,0,slice_bottom_height]) {
+            linear_extrude(slice_thickness+$epsilon) {
+              difference() {
+                offset(r=$thickness+$epsilon) children(0);
+                offset(r=slice_offset) children(0);
               }
             }
           }
-          linear_extrude($thickness+$pcb_top_clearance-screen_height-$static_clearance+2*$epsilon, convexity=10) {
+        }
+        translate([0,0,$thickness]) {
+          linear_extrude($pcb_top_clearance-screen_height-$static_clearance, convexity=10) {
             difference() {
               offset(r=$thickness+$epsilon) children(0);
               children(0);

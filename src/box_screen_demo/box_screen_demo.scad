@@ -4,7 +4,7 @@ use <../lib/box_bottom.scad>;
 use <../lib/box_screen.scad>;
 
 $pcb_top_clearance = 10;
-$pcb_thickness = 10;
+$pcb_thickness = 2;
 $box_size = [20,20,20];
 
 $group = "demo";
