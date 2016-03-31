@@ -41,23 +41,29 @@ module add_top_screen_hole(screen_offset, screen_height) {
     translate(screen_offset) {
       intersection() {
         translate([0,0,$thickness]) {
-          minkowski(convexity=10) {
-            sphere(r=$thickness);
-            linear_extrude($thickness+$pcb_top_clearance-screen_height+$epsilon, convexity=10) {
-              difference() {
-                offset(r=$thickness+$epsilon) {
-                  children(0);
-                }
-                offset(r=$thickness) {
-                  children(0);
+          slice_count = floor($fn/2);
+          for (i = [0 : slice_count-1]) {
+            theta_bottom = i*90/slice_count;
+            theta_top = theta_bottom + 90/slice_count;
+            slice_bottom_height = sin(theta_bottom)*$thickness;
+            slice_top_height = sin(theta_top)*$thickness;
+            slice_thickness = slice_top_height-slice_bottom_height;
+            slice_bottom_radius = cos(theta_bottom)*$thickness;
+            slice_top_radius = cos(theta_top)*$thickness;
+            translate([0,0,-slice_bottom_height]) {
+              linear_extrude(slice_thickness) {
+                difference() {
+                  slice_radius = (slice_top_radius+slice_bottom_radius)/2;
+                  //echo(slice_top_radius,slice_bottom_radius,(slice_bottom_radius-slice_top_radius)*(slice_bottom_radius-slice_top_radius)+slice_thickness*slice_thickness);
+                  offset(r=$thickness+$epsilon) children(0);
+                  offset(r=$thickness-slice_radius) children(0);
                 }
               }
             }
           }
-        }
-        translate([0,0,-$epsilon]) {
           linear_extrude($thickness+$pcb_top_clearance-screen_height-$static_clearance+2*$epsilon, convexity=10) {
-            offset(r=$thickness) {
+            difference() {
+              offset(r=$thickness+$epsilon) children(0);
               children(0);
             }
           }
