@@ -72,12 +72,8 @@ module triangle_up(triangle_side) {
           paths=[[0,2,1]]);
 }
 
-if ($group == "list") {
-  echo("Printable: top, bottom, button");
-  echo("All: demo, top, bottom, button");
-}
-
 //$group = "demo";
+
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print", 16) {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
@@ -112,55 +108,55 @@ if ($group == "demo" || $group == "bottom") {
   render_box_bottom($group == "demo" ? "demo" : "print", 9) {
     add_bottom_support_posts() {
       add_screw_holes_in_corners(screw_type) {
-        box_bottom();
+        box_bottom(0);
       }
     }
   }
 }
 
 if ($group == "demo" || $group == "right") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 0) {
       rotate(-90) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "left") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 0) {
       rotate(90) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "up") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 0) {
       rotate(0) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "down") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 0) {
       rotate(180) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "ok") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 0) {
       circle(r=3);
     }
   }
 }
 
 if ($group == "demo" || $group == "reset") {
-  render_box_bottom($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3) {
+  render_box_bottom($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 0) {
       translate([-3, -3]) square([6,6]);
     }
   }

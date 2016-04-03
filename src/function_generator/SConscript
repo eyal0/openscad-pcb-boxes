@@ -1,19 +1,24 @@
 #!python
 
-Import('env openscad2 openscad_counter')
+import subprocess
+import os
 
-printable_parts = ['top', 'bottom', 'left', 'up', 'right', 'down']
-all_parts = ['demo'] + printable_parts
+Import('env openscad2 openscad_counter openscad_echo')
 
-for part in all_parts:
+parts = {'top': 17,
+         'bottom': 10,
+         'right': 2,
+         'left': 2,
+         'up': 2,
+         'down': 2,
+         'ok': 2,
+         'reset': 2}
+
+for part in parts:
   openscad_counter(target='function_generator_' + part,
-                   source=['function_generator_box'], counter=16)
+                   source=['function_generator_box'], counter=parts[part])
 
 env.Alias('function_generator',
           ['function_generator_' + part + suffix
-           for part in all_parts
-           for suffix in ['.png', '.stl']])
-
-env.Alias('function_generator_printable_parts',
-          ['function_generator_' + part + '.stl'
-           for part in printable_parts])
+           for part in parts
+           for suffix in ['.stl']])

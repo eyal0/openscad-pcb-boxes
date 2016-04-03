@@ -13,14 +13,12 @@ else:
   openscad_binary = "openscad-nightly"
 
 def openscad(target, source, env):
-  group = str(target[0]).split("_")[-1].split(".")[0]
   for t in target:
-    command = [openscad_binary,
-              '-D', ('$group={0}"' + group + '{0}"').format("" if windows else ""),
-              '-D', '$fn=' + str(env['fn']),
-              '--viewall', '--autocenter', '--render',
-              '-o', str(target[0]),
-              str(source[0])]
+    command = [openscad_binary]
+    command += env['ARGS']
+    command += [
+        '-o', str(target[0]),
+        str(source[0])]
     print command
     subprocess.call(command)
 
@@ -50,18 +48,22 @@ def openscad_counter(target, source, counter):
     for s in sources:
       for i in xrange(counter):
         group = str(t).split("_")[-1].split(".")[0]
-        filename = "/" + os.getcwd() + "/" + target[0]
-        print filename
-        command = [openscad_binary,
-                   '-D', ('$group="' + group + '"'),
-                   '-D', '$fn=' + str(env['fn']),
-                   '-D', ('$filename="' + filename + '"'),
-                   '-D', str(i),
-                   '--viewall', '--autocenter', '--render',
-                   '-o', str(t),
-                   str(s)]
-        print command
-        subprocess.call(command)
+        #TODO: use Dir() below
+        filename = "/" + os.getcwd() + "/" + str(t).split(".")[0]
+        if i < counter-1:
+          out_file = t.split(".")[0] + "_" + str(i) + "." + t.split(".")[1]
+        else :
+          out_file = t
+        in_files = [s]
+        if i > 0:
+          in_files += [t.split(".")[0] + "_" + str(i-1) + "." + t.split(".")[1]]
+        args = [
+            '-D', ('$group="' + group + '"'),
+            '-D', '$fn=' + str(env['fn']),
+            '-D', ('$filename="' + filename + '"'),
+            '-D', ('$level=' + str(i)),
+            '--viewall', '--autocenter', '--render']
+        env.Openscad(target=out_file,source=in_files,ARGS=args,COUNTER=counter)
 
 
 openscad = Builder(

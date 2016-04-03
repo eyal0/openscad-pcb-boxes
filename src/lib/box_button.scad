@@ -112,28 +112,26 @@ module add_button(button_offset, button_height, level) {
       echo("ERROR: $epsilon is not set in add_button");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    render_box_top("demo", level) {
-      translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
-        rotate([180,0,0]) {
-          minkowski() {
-            sphere(r=$thickness);
-            linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
-              offset(r=-$thickness) {
-                upsidedown_polygon() { // because it's upsidedown from the top
-                  children(0);
-                }
+    translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
+      rotate([180,0,0]) {
+        minkowski() {
+          sphere(r=$thickness);
+          linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
+            offset(r=-$thickness) {
+              upsidedown_polygon() { // because it's upsidedown from the top
+                children(0);
               }
             }
           }
-          translate([0,0,-$thickness]) {
-            linear_extrude($thickness, convexity=10) {
-              offset(r=$thickness) {
-                offset(r=$dynamic_clearance) {
-                  offset(r=$thickness) {
-                    offset(r=-$thickness) {
-                      upsidedown_polygon() { // because it's upsidedown from the top
-                        children(0);
-                      }
+        }
+        translate([0,0,-$thickness]) {
+          linear_extrude($thickness, convexity=10) {
+            offset(r=$thickness) {
+              offset(r=$dynamic_clearance) {
+                offset(r=$thickness) {
+                  offset(r=-$thickness) {
+                    upsidedown_polygon() { // because it's upsidedown from the top
+                      children(0);
                     }
                   }
                 }
@@ -143,11 +141,5 @@ module add_button(button_offset, button_height, level) {
         }
       }
     }
-  }
-}
-
-module render_box_button(style) {
-  if (style == "demo" || style == "print") {
-    children();
-  }
+ }
 }

@@ -67,7 +67,10 @@ module add_bottom_support_posts() {
 }
 $group = "demo";
 if ($group == "list") {
-  echo("Printable: top, bottom, button");
+  echo("{'printable': ['top', 'bottom', 'button'],
+         'all'      : ['top', 'bottom', 'button', 'demo'],
+         
+");
   echo("All: demo, top, bottom, button");
 }
 if ($group == "demo" || $group == "top") {
