@@ -33,11 +33,36 @@ def openscad2(target, source, path):
     sources = [str(source)]
   else:
     sources = [str(source[0]) + suffix for suffix in ['.scad']]
-  #targets = [os.path.join(path, t) for t in targets]
-  #sources = [os.path.join(path, s) for s in sources]
   for t in targets:
     for s in sources:
       env.Openscad(target=t, source=s)
+
+def openscad_counter(target, source, counter):
+  if '.' in str(target):
+    targets = [str(target)]
+  else:
+    targets = [str(target) + suffix for suffix in ['.png', '.stl']]
+  if '.' in str(source):
+    sources = [str(source)]
+  else:
+    sources = [str(source[0]) + suffix for suffix in ['.scad']]
+  for t in targets:
+    for s in sources:
+      for i in xrange(counter):
+        group = str(t).split("_")[-1].split(".")[0]
+        filename = "/" + os.getcwd() + "/" + target[0]
+        print filename
+        command = [openscad_binary,
+                   '-D', ('$group="' + group + '"'),
+                   '-D', '$fn=' + str(env['fn']),
+                   '-D', ('$filename="' + filename + '"'),
+                   '-D', str(i),
+                   '--viewall', '--autocenter', '--render',
+                   '-o', str(t),
+                   str(s)]
+        print command
+        subprocess.call(command)
+
 
 openscad = Builder(
     action = openscad)
@@ -55,6 +80,6 @@ def scad_scan(node, env, path):
 scad_scan = Scanner(function = scad_scan, skeys = ['.scad'])
 env.Append(SCANNERS = scad_scan)
 
-Export('env openscad2')
+Export('env openscad2 openscad_counter')
 conscripts = [dir + '/SConscript' for dir in ['esr_tester', 'holes_demo', 'function_generator', 'box_screw_post_demo', 'box_button_demo', 'box_screen_demo']]
 SConscript(conscripts)

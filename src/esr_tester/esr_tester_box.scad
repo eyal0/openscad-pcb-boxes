@@ -71,7 +71,7 @@ if ($group == "list") {
   echo("All: demo, top, bottom, button");
 }
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print") {
+  render_box_top($group == "demo" ? "demo" : "print", 12) {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness, 11) {
       circle(r=11.5/2);
       add_top_screen_hole(pcb_offset+[8+3,9,0], 5.1, 10) {
@@ -82,7 +82,7 @@ if ($group == "demo" || $group == "top") {
           }
           add_top_support_posts() {
             add_screw_posts_in_corners(screw_type) {
-              box_top();
+              box_top(0);
             }
           }
         }
@@ -91,17 +91,17 @@ if ($group == "demo" || $group == "top") {
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print") {
+  render_box_bottom($group == "demo" ? "demo" : "print", 9) {
     add_bottom_support_posts() {
       add_screw_holes_in_corners(screw_type) {
-        box_bottom();
+        box_bottom(0);
       }
     }
   }
 }
 if ($group == "demo" || $group == "button") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness) {
+  render_box_button($group == "demo" ? "demo" : "print", 2) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness, 1) {
       circle(r=11.5/2);
     }
   }

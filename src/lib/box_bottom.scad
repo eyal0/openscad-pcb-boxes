@@ -1,48 +1,36 @@
-module box_bottom() {
-  if (!$box_size) {
-    echo("ERROR: $box_size not defined in box_bottom");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  if (!$thickness) {
-    echo("ERROR: $thickness not defined in box_bottom");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  if (!$static_clearance) {
-    echo("ERROR: $static_clearance not defined in box_bottom");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  translate ([$thickness+$static_clearance, $thickness+$static_clearance, 0]) {
-    cube($box_size*[[1,0,0],
-                    [0,1,0],
-                    [0,0,0]] +
-         [-2*($thickness+$static_clearance),
-          -2*($thickness+$static_clearance),
-          $thickness]);
+module box_bottom(level) {
+  if ($level != level) {
+  } else {
+    if (!$box_size) {
+      echo("ERROR: $box_size not defined in box_bottom");
+      UNDEFINED_DYNAMIC_VARIABLE_ERROR();
+    }
+    if (!$thickness) {
+      echo("ERROR: $thickness not defined in box_bottom");
+      UNDEFINED_DYNAMIC_VARIABLE_ERROR();
+    }
+    if (!$static_clearance) {
+      echo("ERROR: $static_clearance not defined in box_bottom");
+      UNDEFINED_DYNAMIC_VARIABLE_ERROR();
+    }
+    translate ([$thickness+$static_clearance, $thickness+$static_clearance, 0]) {
+      cube($box_size*[[1,0,0],
+                      [0,1,0],
+                      [0,0,0]] +
+           [-2*($thickness+$static_clearance),
+            -2*($thickness+$static_clearance),
+            $thickness]);
+    }
   }
 }
 
-module print_box_bottom() {
-  if (!$static_clearance) {
-    echo("ERROR: $static_clearance not defined in print_box_bottom");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  if (!$thickness) {
-    echo("ERROR: $thickness not defined in print_box_bottom");
-    UNDEFINED_DYNAMIC_VARIABLE_ERROR();
-  }
-  translate([-$thickness-$static_clearance, -$thickness-$static_clearance, 0]) {
+module render_box_bottom(style, level) {
+  if ($level != level) {
     children();
-  }
-}
-
-module demo_box_bottom() {
-  // Box bottom is already aligned for demo.
-  children();
-}
-
-module render_box_bottom(style) {
-  if (style == "print" || style == "demo") {
-    children();
+  } else {
+    if (style == "print" || style == "demo") {
+      import(str($filename, "_", $level-1, ".stl"));
+    }
   }
 }
 

@@ -87,7 +87,6 @@ use <box_top.scad>;  // to put it in the right place for the box top
 // it is off the top of the pcb.
 module add_button(button_offset, button_height, level) {
  if ($level != level) {
-    children([1:$children-1]);
   } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_button");
@@ -113,7 +112,7 @@ module add_button(button_offset, button_height, level) {
       echo("ERROR: $epsilon is not set in add_button");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    demo_box_top() {
+    render_box_top("demo", level) {
       translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
         rotate([180,0,0]) {
           minkowski() {

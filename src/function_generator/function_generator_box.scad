@@ -24,19 +24,19 @@ pcb_offset = [($box_size[0]-pcb_width)/2,
 
 module add_screw_posts_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180)
-  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0)
-  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180)
-  add_screw_post([               delta_side,                delta_side, 0], screw_type,   0)
+  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 1)
+  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0, 2)
+  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 3)
+  add_screw_post([               delta_side,                delta_side, 0], screw_type,   0, 4)
     children();
 }
 
 module add_screw_holes_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_hole([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180)
-  add_screw_hole([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0)
-  add_screw_hole([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180)
-  add_screw_hole([               delta_side,                delta_side, 0], screw_type,   0)
+  add_screw_hole([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 1)
+  add_screw_hole([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0, 2)
+  add_screw_hole([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 3)
+  add_screw_hole([               delta_side,                delta_side, 0], screw_type,   0, 4)
     children();
 }
 
@@ -47,19 +47,19 @@ pcb_holes = [[                                2.4,  2.4, 0],
              [pcb_width - pcb_hole_diameter - 2.5, 74.2, 0]];
 module add_top_support_posts() {
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  add_top_support_post(pcb_offset + pcb_holes[0] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset + pcb_holes[1] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset + pcb_holes[2] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_top_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter)
+  add_top_support_post(pcb_offset + pcb_holes[0] + pcb_hole_center_offset, pcb_hole_diameter, 5)
+  add_top_support_post(pcb_offset + pcb_holes[1] + pcb_hole_center_offset, pcb_hole_diameter, 6)
+  add_top_support_post(pcb_offset + pcb_holes[2] + pcb_hole_center_offset, pcb_hole_diameter, 7)
+  add_top_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter, 8)
     children();
 }
 
 module add_bottom_support_posts() {
   pcb_hole_center_offset = [pcb_hole_diameter/2,pcb_hole_diameter/2,0];
-  add_bottom_support_post(pcb_offset + pcb_holes[0] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_bottom_support_post(pcb_offset + pcb_holes[1] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_bottom_support_post(pcb_offset + pcb_holes[2] + pcb_hole_center_offset, pcb_hole_diameter)
-  add_bottom_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter)
+  add_bottom_support_post(pcb_offset + pcb_holes[0] + pcb_hole_center_offset, pcb_hole_diameter, 5)
+  add_bottom_support_post(pcb_offset + pcb_holes[1] + pcb_hole_center_offset, pcb_hole_diameter, 6)
+  add_bottom_support_post(pcb_offset + pcb_holes[2] + pcb_hole_center_offset, pcb_hole_diameter, 7)
+  add_bottom_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter, 8)
     children();
 }
 
@@ -77,27 +77,26 @@ if ($group == "list") {
   echo("All: demo, top, bottom, button");
 }
 
-button_thickness = 1;
 //$group = "demo";
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print") {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, $thickness=button_thickness) {
-      rotate(90) triangle_up(6);
-      add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, $thickness=button_thickness) {
-        rotate(-90) triangle_up(6);
-        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, $thickness=button_thickness) {
-          rotate(0) triangle_up(6);
-          add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, $thickness=button_thickness) {
-            rotate(180) triangle_up(6);
-            add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, $thickness=button_thickness) {
+  render_box_top($group == "demo" ? "demo" : "print", 16) {
+    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
+      rotate(90) triangle_up(8);
+      add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 14) {
+        rotate(-90) triangle_up(8);
+        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 13) {
+          rotate(0) triangle_up(8);
+          add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
+            rotate(180) triangle_up(8);
+            add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
               circle(r=3);
-              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, $thickness=button_thickness) {
+              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
                 translate([-3, -3]) square([6,6]);
-                add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9) {
+                add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
                   square([71.1-2*$thickness, 24-2*$thickness]);
                   add_top_support_posts() {
                     add_screw_posts_in_corners(screw_type) {
-                      box_top();
+                      box_top(0);
                     }
                   }
                 }
@@ -110,7 +109,7 @@ if ($group == "demo" || $group == "top") {
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print") {
+  render_box_bottom($group == "demo" ? "demo" : "print", 9) {
     add_bottom_support_posts() {
       add_screw_holes_in_corners(screw_type) {
         box_bottom();
@@ -120,48 +119,48 @@ if ($group == "demo" || $group == "bottom") {
 }
 
 if ($group == "demo" || $group == "right") {
-  render_box_button($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, $thickness=button_thickness) {
-      rotate(-90) triangle_up(6);
+  render_box_button($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3) {
+      rotate(-90) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "left") {
-  render_box_button($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, $thickness=button_thickness) {
-      rotate(90) triangle_up(6);
+  render_box_button($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3) {
+      rotate(90) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "up") {
-  render_box_button($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, $thickness=button_thickness) {
-      rotate(0) triangle_up(6);
+  render_box_button($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3) {
+      rotate(0) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "down") {
-  render_box_button($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, $thickness=button_thickness) {
-      rotate(180) triangle_up(6);
+  render_box_button($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3) {
+      rotate(180) triangle_up(8);
     }
   }
 }
 
 if ($group == "demo" || $group == "ok") {
-  render_box_button($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, $thickness=button_thickness) {
+  render_box_button($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3) {
       circle(r=3);
     }
   }
 }
 
 if ($group == "demo" || $group == "reset") {
-  render_box_bottom($group == "demo" ? "demo" : "print", $thickness=button_thickness) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, $thickness=button_thickness) {
+  render_box_bottom($group == "demo" ? "demo" : "print") {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3) {
       translate([-3, -3]) square([6,6]);
     }
   }
