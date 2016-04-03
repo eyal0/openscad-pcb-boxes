@@ -12,14 +12,11 @@ function screw_posts_max_radius(screw_type) =
 
 // nut_opening_rotation 0 is to the right when viewed above.  positive values rotate positive y.
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
-module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation) {
-  /*function screw(p) = get_screw_param(screw_type, p);
-  $level = $level - 1;
-  $level_count = $level_count + 1;
-  if ($level != 0) {
+module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, level) {
+  function screw(p) = get_screw_param(screw_type, p);
+  if ($level != level) {
     children();
   } else {
-*/
     if (!$thickness) {
       echo("ERROR: $thickness not defined in add_screw_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -71,9 +68,8 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation) {
       }
     }
   }
-//}
+}
 
-  
 
 // nut_opening_rotation 0 is to the right when viewed above.  positive values rotate toward positive y.
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
@@ -102,7 +98,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
       echo("ERROR: $box_size not defined in add_screw_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-  
+
     // box outer height - post height of screw hole - offset if the post is floating
     post_height = $box_size[2] -
       (screw("screw_head_height") + screw("screw_sunk") + 2*$static_clearance + $thickness + screw("nut_thickness")/2) // post_height from above
@@ -110,30 +106,30 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
       - post_center_offset[2]; // in case the post is floating
     nut_radius_with_dynamic_clearance = screw("nut_diameter")/2 + $dynamic_clearance*2/sqrt(3);
     post_radius = nut_radius_with_dynamic_clearance + $thickness;
-  
+
     fitting_hex_height = post_height + screw("nut_thickness")/2; // from above without the clearance
-  
+
     nut_opening_width = screw("nut_width")+2*$dynamic_clearance;
-  
+
     nut_pocket_total = post_height-2*$thickness-2*$static_clearance;
-  
+
     nut_opening_height0 = screw("nut_thickness") + 2*$dynamic_clearance;
     if (nut_pocket_total - nut_opening_height0 < 0) {
       echo("ERROR: Box not tall enough for nut opening.");
       BOX_NOT_TALL_ENOUGH_FOR_NUT_OPENING();
     }
-  
+
     nut_pit_height = range(0, screw("nut_thickness")/2,
                            nut_pocket_total - nut_opening_height0);
-  
+
     nut_opening_height1 = range(nut_opening_height0, screw("nut_width") + 2*$dynamic_clearance,
                                 nut_pocket_total - nut_pit_height);
-  
+
     nut_dome_height = range(0, screw("nut_thickness")/2,
                             nut_pocket_total - nut_opening_height1 - nut_pit_height);
-  
+
     nut_opening_height = post_height-2*$thickness-2*$static_clearance - nut_pit_height - nut_dome_height;
-  
+
     nut_pocket_height = 2*$static_clearance + nut_pit_height + nut_dome_height + nut_opening_height;
     import(str($filename, "_", level-1, ".stl"));
     translate(post_center_offset) {
