@@ -34,11 +34,9 @@ module add_top_button_hole(button_offset, button_height, level) {
       import(str($filename, "_", $level-1, ".stl"));
       translate(button_offset + [0,0,-$epsilon])  {
         linear_extrude(height=$thickness+2*$epsilon, convexity=10) {
-          offset(r=$dynamic_clearance) {
-            offset(r=$thickness) {
-              offset(r=-$thickness) {
-                children(0);
-              }
+          offset(r=$dynamic_clearance+$thickness) {
+            offset(r=-$thickness) {
+              children(0);
             }
           }
         }
@@ -53,22 +51,14 @@ module add_top_button_hole(button_offset, button_height, level) {
         }
         linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance, convexity=10) {
           difference() {
-            offset(r=$thickness) {
-              offset(r=$dynamic_clearance) {  // make space for movement
-                // this and the next line to round the button's corners
-                offset(r=$thickness) {
-                  offset(r=-$thickness) {
-                    children(0);
-                  }
-                }
+            offset(r=2*$thickness+$dynamic_clearance) {
+              offset(r=-$thickness) {
+                children(0);
               }
             }
-            offset(r=$dynamic_clearance) {  // make space for movement
-              // this and the next line to round the button's corners
-              offset(r=$thickness) {
-                offset(r=-$thickness) {
-                  children(0);
-                }
+            offset(r=$dynamic_clearance + $thickness) {
+              offset(r=-$thickness) {
+                children(0);
               }
             }
           }
@@ -86,7 +76,7 @@ use <box_top.scad>;  // to put it in the right place for the box top
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
 module add_button(button_offset, button_height, level) {
- if ($level != level) {
+  if ($level != level) {
   } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_button");
@@ -126,14 +116,10 @@ module add_button(button_offset, button_height, level) {
         }
         translate([0,0,-$thickness]) {
           linear_extrude($thickness, convexity=10) {
-            offset(r=$thickness) {
-              offset(r=$dynamic_clearance) {
-                offset(r=$thickness) {
-                  offset(r=-$thickness) {
-                    upsidedown_polygon() { // because it's upsidedown from the top
-                      children(0);
-                    }
-                  }
+            offset(r=2*$thickness+$dynamic_clearance) {
+              offset(r=-$thickness) {
+                upsidedown_polygon() { // because it's upsidedown from the top
+                  children(0);
                 }
               }
             }
@@ -141,5 +127,5 @@ module add_button(button_offset, button_height, level) {
         }
       }
     }
- }
+  }
 }
