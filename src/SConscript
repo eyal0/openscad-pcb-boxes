@@ -26,7 +26,7 @@ def openscad2(target, source, path):
   if '.' in str(target):
     targets = [str(target)]
   else:
-    targets = [str(target) + suffix for suffix in ['.png', '.stl']]
+    targets = [str(target) + suffix for suffix in ['.stl']]
   if '.' in str(source):
     sources = [str(source)]
   else:
@@ -39,7 +39,7 @@ def openscad_counter(target, source, counter):
   if '.' in str(target):
     targets = [str(target)]
   else:
-    targets = [str(target) + suffix for suffix in ['.png', '.stl']]
+    targets = [str(target) + suffix for suffix in ['.stl']]
   if '.' in str(source):
     sources = [str(source)]
   else:
