@@ -1,9 +1,6 @@
 #!python
 
-import subprocess
-import os
-
-Import('env openscad2 openscad_counter openscad_echo')
+Import('env openscad2 openscad_counter')
 
 parts = {'top': 17,
          'bottom': 10,
