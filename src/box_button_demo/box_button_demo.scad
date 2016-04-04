@@ -18,28 +18,23 @@ module arrow_up() {
       );
 }
 
-$group = "demo";
-if ($group == "list") {
-  echo("Printable: top, button, bottom");
-  echo("All: demo, top, button, bottom");
-}
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print") {
-    add_top_button_hole([15,15,0], 5) {
+  render_box_top($group == "demo" ? "demo" : "print", 2) {
+    add_top_button_hole([15,15,0], 5, 1) {
       arrow_up();
-      box_top();
+      box_top(0);
     }
   }
 }
 if ($group == "demo" || $group == "button") {
-  render_box_button($group == "demo" ? "demo" : "print") {
-    add_button([15,15,0], 5) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button([15,15,0], 5, 0)  {
       arrow_up();
     }
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print") {
-    box_bottom();
+  render_box_bottom($group == "demo" ? "demo" : "print", 1) {
+    box_bottom(0);
   }
 }

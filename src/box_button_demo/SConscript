@@ -1,19 +1,17 @@
 #!python
 import itertools
 
-Import('env openscad2')
-printable_parts = ['top', 'button', 'bottom']
-all_parts = ['demo'] + printable_parts
+Import('env openscad2 openscad_counter')
 
-for part in all_parts:
-  openscad2(target='box_button_demo_' + part,
-            source=['box_button_demo'], path="src/box_button_demo")
+parts = {'top': 3,
+         'bottom': 2,
+         'button': 2}
+
+for part in parts:
+  openscad_counter(target='box_button_demo_' + part,
+                   source=['box_button_demo'], counter=parts[part])
 
 env.Alias('box_button_demo',
           ['box_button_demo_' + part + suffix
-           for part in all_parts
-           for suffix in ['.png', '.stl']])
-
-env.Alias('box_button_demo_printable_parts',
-          ['box_button_demo_' + part + '.stl'
-           for part in printable_parts])
+           for part in parts
+           for suffix in ['.stl']])
