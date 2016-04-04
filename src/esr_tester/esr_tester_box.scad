@@ -65,14 +65,6 @@ module add_bottom_support_posts() {
   add_bottom_support_post(pcb_offset + pcb_holes[3] + pcb_hole_center_offset, pcb_hole_diameter, 8)
     children();
 }
-$group = "demo";
-if ($group == "list") {
-  echo("{'printable': ['top', 'bottom', 'button'],
-         'all'      : ['top', 'bottom', 'button', 'demo'],
-         
-");
-  echo("All: demo, top, bottom, button");
-}
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print", 12) {
     add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness, 11) {
@@ -103,8 +95,8 @@ if ($group == "demo" || $group == "bottom") {
   }
 }
 if ($group == "demo" || $group == "button") {
-  render_box_button($group == "demo" ? "demo" : "print", 2) {
-    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness, 1) {
+  render_box_top($group == "demo" ? "demo" : "print", 1) {
+    add_button(pcb_offset+[pcb_width, pcb_depth, 0]-[13.2 - 11.9/2, 13.6-11.9/2,0], 8.4-$pcb_thickness, 0) {
       circle(r=11.5/2);
     }
   }

@@ -1,19 +1,16 @@
 #!python
 
-Import('env openscad2')
+Import('env openscad2 openscad_counter')
 
-printable_parts = ['button', 'top', 'bottom']
-all_parts = ['demo'] + printable_parts
+parts = {'top': 12,
+         'bottom': 9,
+         'button': 2}
 
-for part in all_parts:
-  openscad2(target='esr_tester_' + part,
-               source=['esr_tester_box'], path="src/esr_tester")
+for part in parts:
+  openscad_counter(target='esr_tester_' + part,
+            source=['esr_tester_box'], counter=parts[part])
 
 env.Alias('esr_tester',
           ['esr_tester_' + part + suffix
-           for part in all_parts
-           for suffix in ['.png', '.stl']])
-
-env.Alias('esr_tester_printable_parts',
-          ['esr_tester_' + part + '.stl'
-           for part in printable_parts])
+           for part in parts
+           for suffix in ['.stl']])
