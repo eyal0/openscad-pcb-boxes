@@ -48,8 +48,8 @@ def openscad_counter(target, source, counter):
     for s in sources:
       for i in xrange(counter):
         group = str(t).split("_")[-1].split(".")[0]
+        filename = os.path.splitext(env.File(t).abspath)[0]
         #TODO: use Dir() below
-        filename = "/" + os.getcwd() + "/" + str(t).split(".")[0]
         if i < counter-1:
           out_file = t.split(".")[0] + "_" + str(i) + "." + t.split(".")[1]
         else :
