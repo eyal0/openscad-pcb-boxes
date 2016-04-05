@@ -31,7 +31,7 @@ module add_top_button_hole(button_offset, button_height, level) {
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
     difference() {
-      import(str($filename, "_", $level-1, ".stl"));
+      import($import_filename);
       translate(button_offset + [0,0,-$epsilon])  {
         linear_extrude(height=$thickness+2*$epsilon, convexity=10) {
           offset(r=$dynamic_clearance+$thickness) {
@@ -46,7 +46,7 @@ module add_top_button_hole(button_offset, button_height, level) {
       intersection() { //intersection so that the hole's supports aren't sticking out of the box top.
         translate(-button_offset) {
           hull() {
-            import(str($filename, "_", $level-1, ".stl"));
+            import($import_filename);
           }
         }
         linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance, convexity=10) {

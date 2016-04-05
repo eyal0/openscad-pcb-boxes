@@ -29,7 +29,7 @@ module render_box_bottom(style, level) {
     children();
   } else {
     if (style == "print" || style == "demo") {
-      import(str($filename, "_", $level-1, ".stl"));
+      import($import_filename);
     }
   }
 }

@@ -41,7 +41,7 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, lev
 
     difference() {
       union() {
-        import(str($filename, "_", $level-1, ".stl"));
+        import($import_filename);
         translate(upsidedown_offset(screw_center_offset)) {
           rotate(upsidedown_angle(-90+nut_opening_rotation)) {
             // post
@@ -131,13 +131,13 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
     nut_opening_height = post_height-2*$thickness-2*$static_clearance - nut_pit_height - nut_dome_height;
 
     nut_pocket_height = 2*$static_clearance + nut_pit_height + nut_dome_height + nut_opening_height;
-    import(str($filename, "_", level-1, ".stl"));
+    import($import_filename);
     translate(post_center_offset) {
       difference() {
         intersection() { //intersection so that the post isn't sticking out of the box top.
           translate(-post_center_offset) {
             hull() {
-              import(str($filename, "_", level-1, ".stl"));
+              import($import_filename);
             }
           }
           rotate(-90+nut_opening_rotation) {
@@ -180,7 +180,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
               }
             }
             translate(-post_center_offset) {
-              import(str($filename, "_", level-1, ".stl"));
+              import($import_filename);
             }
           }
         }

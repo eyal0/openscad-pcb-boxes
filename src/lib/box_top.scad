@@ -46,7 +46,7 @@ module render_box_top(style, level) {
     children();
   } else {
     if (style == "print") {
-      import(str($filename, "_", $level-1, ".stl"));
+      import($import_filename);
     }
     if (style == "demo") {
       if (!$box_size) {
@@ -55,7 +55,7 @@ module render_box_top(style, level) {
       }
       translate([0, $box_size[1], $box_size[2]]) {
         rotate([180,0,0]) {
-          import(str($filename, "_", $level-1, ".stl"));
+          import($import_filename);
         }
       }
     }

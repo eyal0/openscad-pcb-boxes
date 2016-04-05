@@ -25,7 +25,7 @@ module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
       echo("ERROR: $static_clearance is not set in add_top_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    import(str($filename, "_", level-1, ".stl"));
+    import($import_filename);
     // Height of the post that supports the stub.
     post_height = $thickness + $pcb_top_clearance - $static_clearance;
     // Height of the stub including post height.
@@ -37,7 +37,7 @@ module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
       intersection() { //intersection so that the post isn't sticking out of the box top.
         translate(-post_center_offset) {
           hull() {
-            import(str($filename, "_", level-1, ".stl"));
+            import($import_filename);
           }
         }
         union() {
@@ -80,7 +80,7 @@ module add_bottom_support_post(post_center_offset, pcb_hole_diameter, level) {
       echo("ERROR: $epsilon is not set in add_bottom_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    import(str($filename, "_", level-1, ".stl"));
+    import($import_filename);
     // Height of the post that accepts the stub.
     // Box outer height - post height of screw hole - pcb thickness - offset if post is floating
     post_height = $box_size[2] -

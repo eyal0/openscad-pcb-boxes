@@ -28,7 +28,7 @@ module add_top_screen_hole(screen_offset, screen_height, level) {
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
     difference() {
-      import(str($filename, "_", $level-1, ".stl"));
+      import($import_filename);
       translate(screen_offset-[0,0,$epsilon]) {
         linear_extrude($thickness+2*$epsilon+$pcb_top_clearance-screen_height-$static_clearance, convexity=10) {
           offset(r=$thickness) {
@@ -39,7 +39,7 @@ module add_top_screen_hole(screen_offset, screen_height, level) {
     }
     intersection() { //intersection so that the screen hole sides aren't outside the box size.
       hull() {
-        import(str($filename, "_", $level-1, ".stl"));
+        import($import_filename);
       }
       translate(screen_offset) {
         intersection() {
