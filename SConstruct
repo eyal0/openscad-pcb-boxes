@@ -6,7 +6,8 @@ AddOption("--fn",
           action = "store",
           metavar="VAL",
           help=('$fn=VAL when building.  '
-                'Higher for greater resolution but longer build times.'))
+                'Higher for greater resolution but longer build times.'),
+          default=10)
 
 output_dir = 'output_fn' + str(GetOption('fn'))
 SConscript('src/SConscript', variant_dir=output_dir, duplicate=0)
