@@ -72,27 +72,73 @@ module triangle_up(triangle_side) {
           paths=[[0,2,1]]);
 }
 
+module reverse_difference() {
+  difference() {
+    children([1:$children-1]);
+    children(0);
+  }
+}
+
 //$group = "demo";
 
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print", 16) {
-    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
-      rotate(90) triangle_up(8);
-      add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 14) {
-        rotate(-90) triangle_up(8);
-        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 13) {
-          rotate(0) triangle_up(8);
-          add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
-            rotate(180) triangle_up(8);
-            add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
-              circle(r=3);
-              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
-                translate([-3, -3]) square([6,6]);
-                add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
-                  square([71.1-2*$thickness, 24-2*$thickness]);
-                  add_top_support_posts() {
-                    add_screw_posts_in_corners(screw_type) {
-                      box_top(0);
+  render_box_top($group == "demo" ? "demo" : "print", 17) {
+    add_top_screen_hole(pcb_offset+[-pcb_offset[0]-$epsilon,pcb_depth-33,0], 0, 16) {
+      square([6.6+pcb_offset[0]+$epsilon, 13.2]);
+      add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
+        rotate(90) triangle_up(8);
+        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 14) {
+          rotate(-90) triangle_up(8);
+          add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 13) {
+            rotate(0) triangle_up(8);
+            add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
+              rotate(180) triangle_up(8);
+              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
+                circle(r=3);
+                add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
+                  translate([-3, -3]) square([6,6]);
+                  add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
+                    square([71.1-2*$thickness, 24-2*$thickness]);
+                    add_top_support_posts() {
+                      add_screw_posts_in_corners(screw_type) {
+                        reverse_difference() {
+                          union() {
+                            // Left BNC.
+                            translate([pcb_offset[0]+16.09,
+                                       $box_size[1]+$epsilon,
+                                       $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-12.25/2]) {
+                              rotate([90,0,0]) {
+                                cylinder(h=$thickness+2*$epsilon, r=12.25/2+$epsilon);
+                              }
+                            }
+                            // Right BNC.
+                            translate([pcb_offset[0]+16.09+16.71,
+                                       $box_size[1]+$epsilon,
+                                       $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-12.25/2]) {
+                              rotate([90,0,0]) {
+                                cylinder(h=$thickness+2*$epsilon, r=12.25/2+$static_clearance);
+                              }
+                            }
+                            // Right knob.
+                            translate([pcb_offset[0]+pcb_width-15.04,
+                                       $box_size[1]+$epsilon,
+                                       $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-6.99]) {
+                              rotate([90,0,0]) {
+                                cylinder(h=$thickness+2*$epsilon, r=7/2+$static_clearance);
+                              }
+                            }
+                            // Left knob.
+                            translate([pcb_offset[0]+pcb_width-28.26,
+                                       $box_size[1]+$epsilon,
+                                       $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-6.99]) {
+                              rotate([90,0,0]) {
+                                cylinder(h=$thickness+2*$epsilon, r=7/2+$static_clearance);
+                              }
+                            }
+                          }
+                          box_top(0);
+                        }
+                      }
                     }
                   }
                 }
