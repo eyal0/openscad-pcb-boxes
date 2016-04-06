@@ -16,6 +16,31 @@ else:
 meshlab_binary = "meshlabserver"
 meshlab_filter_script = "../meshlab_scripts/stl_cleanup.mlx"
 
+def stream_command(command, err_words):
+  lines = ''
+  command_text = "'" + "' '".join(command) + "'\n"
+  if not GetOption('silent'):
+    sys.stdout.write(command_text)
+  else:
+    lines += command_text
+  p = subprocess.Popen(command,
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.STDOUT)
+  for line in iter(p.stdout.readline, ''):
+    lines += line
+    if not GetOption('silent'):
+      sys.stdout.write(line)
+    if any([err_word in line.lower()
+            for err_word in err_words]):
+      # Haven't yet printed output but need to because error.
+      if GetOption('silent'):
+        sys.stdout.write(lines)
+      p.terminate()
+      p.wait()
+      return p.returncode or 127
+  p.wait()
+  return p.returncode
+
 def openscad(target, source, env):
   for t in target:
     command = [openscad_binary]
@@ -23,20 +48,7 @@ def openscad(target, source, env):
     command += [
         '-o', str(target[0]),
         str(source[0])]
-    if not GetOption('silent'):
-      print "'" + "' '".join(command) + "'"
-    p = subprocess.Popen(command, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE)
-    stdoutdata, stderrdata = p.communicate()
-    if p.returncode != 0 or not GetOption('silent'):
-      sys.stderr.write(stderrdata)
-      sys.stdout.write(stdoutdata)
-    if p.returncode != 0:
-      return p.returncode
-    if any([err_word.lower() in text.lower()
-           for err_word in ['warn', 'err']
-           for text in [stdoutdata, stderrdata]]):
-      return 127
+    return stream_command(command, ['warn', 'err'])
 
 def openscad2(target, source, path):
   if '.' in str(target):
@@ -125,15 +137,7 @@ def filter_stl(target, source, env):
              '-i', infile,
              '-o', outfile,
              '-s', str(source[1])]
-  if not GetOption('silent'):
-    print "'" + "' '".join(command) + "'"
-  p = subprocess.Popen(command, stdout=subprocess.PIPE,
-                       stderr=subprocess.PIPE)
-  stdoutdata, stderrdata = p.communicate()
-  if p.returncode != 0 or not GetOption('silent'):
-    sys.stderr.write(stderrdata)
-    sys.stdout.write(stdoutdata)
-  return p.returncode
+  return stream_command(command, [])
 
 openscad_builder = Builder(
     action = openscad)
