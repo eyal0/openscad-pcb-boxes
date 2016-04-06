@@ -24,19 +24,19 @@ pcb_offset = [($box_size[0]-pcb_width)/2,
 
 module add_screw_posts_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 1)
-  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0, 2)
-  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 3)
-  add_screw_post([               delta_side,                delta_side, 0], screw_type,   0, 4)
+  add_screw_post([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, -90, 1)
+  add_screw_post([$box_size[0] - delta_side,                delta_side, 0], screw_type,  90, 2)
+  add_screw_post([               delta_side, $box_size[1] - delta_side, 0], screw_type, -90, 3)
+  add_screw_post([               delta_side,                delta_side, 0], screw_type,  90, 4)
     children();
 }
 
 module add_screw_holes_in_corners(screw_type) {
   delta_side = 2*$thickness + screw_posts_max_radius(screw_type);
-  add_screw_hole([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 1)
-  add_screw_hole([$box_size[0] - delta_side,                delta_side, 0], screw_type,   0, 2)
-  add_screw_hole([               delta_side, $box_size[1] - delta_side, 0], screw_type, 180, 3)
-  add_screw_hole([               delta_side,                delta_side, 0], screw_type,   0, 4)
+  add_screw_hole([$box_size[0] - delta_side, $box_size[1] - delta_side, 0], screw_type, -90, 1)
+  add_screw_hole([$box_size[0] - delta_side,                delta_side, 0], screw_type,  90, 2)
+  add_screw_hole([               delta_side, $box_size[1] - delta_side, 0], screw_type, -90, 3)
+  add_screw_hole([               delta_side,                delta_side, 0], screw_type,  90, 4)
     children();
 }
 
