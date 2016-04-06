@@ -131,7 +131,6 @@ def filter_stl(target, source, env):
                        stderr=subprocess.PIPE)
   stdoutdata, stderrdata = p.communicate()
   if p.returncode != 0 or not GetOption('silent'):
-    print "'" + "' '".join(command) + "'"
     sys.stderr.write(stderrdata)
     sys.stdout.write(stdoutdata)
   return p.returncode
