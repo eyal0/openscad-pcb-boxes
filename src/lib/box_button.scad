@@ -14,7 +14,8 @@ module add_top_button_hole(button_offset, button_height, level) {
       echo("ERROR: $thickness is not set in add_top_button_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    $rounding = $rounding?$rounding:$thickness;
+    $inner_thickness = $inner_thickness?$inner_thickness:$thickness;
+    $rounding = $rounding?$rounding:$inner_thickness;
     if (!$epsilon) {
       echo("ERROR: $epislon is not set in add_top_button_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -51,9 +52,9 @@ module add_top_button_hole(button_offset, button_height, level) {
             import($import_filename);
           }
         }
-        linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance, convexity=10) {
+        linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance+$thickness-$inner_thickness, convexity=10) {
           difference() {
-            offset(r=$thickness+$rounding+$dynamic_clearance) {
+            offset(r=$inner_thickness+$rounding+$dynamic_clearance) {
               offset(r=-$rounding) {
                 children(0);
               }
@@ -84,7 +85,8 @@ module add_button(button_offset, button_height, level) {
       echo("ERROR: $thickness is not set in add_button");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    $rounding = $rounding?$rounding:$thickness;
+    $inner_thickness = $inner_thickness?$inner_thickness:$thickness;
+    $rounding = $rounding?$rounding:$inner_thickness;
     if (!$pcb_top_clearance) {
       echo("ERROR: $pcb_top_clearance is not set in add_button");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -107,19 +109,32 @@ module add_button(button_offset, button_height, level) {
     }
     translate(button_offset + [0,0,$pcb_top_clearance-button_height-$static_clearance]) {
       rotate([180,0,0]) {
-        minkowski() {
-          scale([1,1,$thickness/$rounding]) sphere(r=$rounding);
-          linear_extrude($pcb_top_clearance-button_height-$static_clearance, convexity=10) {
-            offset(r=-$rounding) {
-              upsidedown_polygon() { // because it's upsidedown from the top
-                children(0);
+        // Most of the button.
+        intersection() { // So that the rounding doesn't stick out the base at the bottom.
+          translate([0,0,-$inner_thickness]) {
+            linear_extrude($pcb_top_clearance-button_height-$static_clearance+2*$thickness) {
+              offset(r=$rounding) offset(r=-$rounding) {
+                upsidedown_polygon() { // because it's upsidedown from the top
+                  children(0);
+                }
+              }
+            }
+          }
+          minkowski() {
+            scale([1,1,$thickness/$rounding]) sphere(r=$rounding);
+            linear_extrude($pcb_top_clearance-button_height-$static_clearance-$inner_thickness+$thickness, convexity=10) {
+              offset(r=-$rounding) {
+                upsidedown_polygon() { // because it's upsidedown from the top
+                  children(0);
+                }
               }
             }
           }
         }
-        translate([0,0,-$thickness]) {
-          linear_extrude($thickness, convexity=10) {
-            offset(r=$thickness+$rounding+$dynamic_clearance) {
+        // Base of the button.
+        translate([0,0,-$inner_thickness]) {
+          linear_extrude($inner_thickness, convexity=10) {
+            offset(r=$inner_thickness+$rounding+$dynamic_clearance) {
               offset(r=-$rounding) {
                 upsidedown_polygon() { // because it's upsidedown from the top
                   children(0);

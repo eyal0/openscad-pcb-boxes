@@ -7,6 +7,7 @@ use <../lib/box_button.scad>;
 $pcb_top_clearance = 10;
 $pcb_thickness = 10;
 $box_size = [100,50,30];
+$inner_thickness = 1;
 $rounding = 0.5;
 module arrow_up() {
     polygon(points=[

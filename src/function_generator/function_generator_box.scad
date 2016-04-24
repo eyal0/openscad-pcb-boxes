@@ -73,7 +73,7 @@ module triangle_up(triangle_side) {
 }
 
 module arrow_up() {
-  triangle_up(6.5);
+  triangle_up(8);
 }
 
 module reverse_difference() {
@@ -85,7 +85,7 @@ module reverse_difference() {
 
 //$group = "demo";
 
-$rounding = 0.5;
+$inner_thickness = 1;
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print", 17) {
     add_top_screen_hole(pcb_offset+[1.07,pcb_depth-33,0], 0, 16) {
@@ -99,9 +99,9 @@ if ($group == "demo" || $group == "top") {
             add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
               rotate(180) arrow_up();
               add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
-                circle(r=3);
+                circle(r=4);
                 add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
-                  translate([-3, -3]) square([6,6]);
+                  translate([-4, -4]) square([8,8]);
                   add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
                     square([71.1-2*$thickness, 24-2*$thickness]);
                     add_top_support_posts() {
