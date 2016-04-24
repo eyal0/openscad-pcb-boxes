@@ -33,6 +33,7 @@ module add_top_button_hole(button_offset, button_height, level) {
     }
     difference() {
       import($import_filename);
+      // Subtract a hole for the button.
       translate(button_offset + [0,0,-$epsilon])  {
         linear_extrude(height=$thickness+2*$epsilon, convexity=10) {
           offset(r=$dynamic_clearance+$rounding) {
