@@ -73,7 +73,7 @@ module triangle_up(triangle_side) {
 }
 
 module arrow_up() {
-  triangle_up(7.5);
+  triangle_up(6.5);
 }
 
 module reverse_difference() {
@@ -85,6 +85,7 @@ module reverse_difference() {
 
 //$group = "demo";
 
+$rounding = 0.5;
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print", 17) {
     add_top_screen_hole(pcb_offset+[1.07,pcb_depth-33,0], 0, 16) {
