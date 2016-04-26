@@ -1,3 +1,4 @@
+use <box_top.scad>;
 use <upsidedown.scad>;
 
 // button_offset should be offset to move the first child relative to
@@ -6,12 +7,31 @@ use <upsidedown.scad>;
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
 
-module front_port_hole(port_offset) {
+//$epsilon=0.5;
+
+// Made as wide as $thickness and padded by $epsilon on both sides.
+module front_port_hole(port_offset, offset=0) {
+  /*render_box_top("demo", 0) front_port_hole(port_offset) {
+    children(0);
+  }*/
   // Make the hole for the port.
-  translate([port_offset[0], $box_size[1]+$epsilon, $box_size[2]-port_offset[2]]) {
+  translate([port_offset[0], $thickness+$epsilon, port_offset[2]]) {
     rotate([90,0,0]) {
       linear_extrude($thickness+2*$epsilon) {
-        upsidedown_polygon() {
+        offset(r=offset) {
+          children();
+        }
+      }
+    }
+  }
+}
+
+module project_to_xy() {
+  hull() {
+    children();
+    translate([0,0,-$epsilon]) {
+      linear_extrude($epsilon) {
+        projection() {
           children();
         }
       }
@@ -21,41 +41,29 @@ module front_port_hole(port_offset) {
 
 // First child should be a two-dimensional shape to cut out of the front of the box.  port_offset should have only positive y and z values.
 module add_front_port_top(port_offset, level) {
-  if ($level != level) {
+  if ($level != level && $level != -1) {
     children([1:$children-1]);
   } else {
     difference() {
       children([1:$children-1]);
-      hull() {
-        front_port_hole(port_offset) {
-          children(0);
+      render_box_top("demo", 0) {
+        project_to_xy() {
+          front_port_hole(port_offset) {
+            children(0);
+          }
         }
-        translate([0,0,$box_size[2]]) {
-          linear_extrude($epsilon) {
-            projection() {
-              front_port_hole(port_offset) {
-                children(0);
-              }
-            }
+        project_to_xy() {
+          front_port_hole(port_offset, offset=1, $thickness=$thickness/2+$static_clearance/2) {
+            children(0);
           }
         }
       }
-    }
-  }
-}
-//$epsilon=0.5;
-module front_port_stub(port_offset) {
-  // Make the hole for the port.
-  translate([port_offset[0], $thickness, port_offset[2]]) {
-    rotate([90,0,0]) {
-      linear_extrude($thickness) {
-        children();
-      }
+      
     }
   }
 }
 
-module front_port_stub_hole(port_offset) {
+module front_port_hole_hole(port_offset) {
   // Make the hole for the port.
   translate([port_offset[0], $thickness, port_offset[2]]) {
     rotate([90,0,0]) {
@@ -65,22 +73,21 @@ module front_port_stub_hole(port_offset) {
     }
   }
 }
-  
 
 module add_front_port_bottom(port_offset, level) {
-  if ($level != level) {
+  if ($level != level && $level != -1) {
     children([1:$children-1]);
   } else {
     children([1:$children-1]);
     difference () {
       hull() {
-        front_port_stub(port_offset) {
+        front_port_hole(port_offset) {
           children(0);
         }
         translate([0,0,-$epsilon]) {
           linear_extrude($epsilon) {
             projection() {
-              front_port_stub(port_offset) {
+              front_port_hole(port_offset) {
               children(0);
               }
             }
@@ -89,15 +96,14 @@ module add_front_port_bottom(port_offset, level) {
       }
       minkowski() {
         sphere(r=$epsilon);
-        front_port_stub(port_offset) {
+        front_port_hole(port_offset) {
           children(0);
         }
       }
     }
-    translate([0,0,$thickness]) rotate([-90,0,0]) 
     linear_extrude($thickness + $static_clearance + $epsilon) {
       projection() {
-        front_port_stub(port_offset) {
+        front_port_hole(port_offset) {
           children(0);
         }
       }

@@ -13,28 +13,29 @@ module arrow_up() {
     polygon(points=[
               [0, 0],
               [5,0],
-              [0,12]],
+              [0,9]],
             paths=[
               [0,1,2]
               ]
       );
 }
-$group = "bottom";
-$level = 0;
+$fn=60;
+$group = "top";
+$level = -1;
 if ($group == "demo" || $group == "top") {
   //render_box_top($group == "demo" ? "demo" : "print", 0) {
-    add_front_port_top([15,0,15], 0) {
-      arrow_up();
-      box_top(0);
-    }
+  add_front_port_top([15,0,15], 0) {
+    arrow_up();
+    box_top(0);
+  }
   //}
 }
 if ($group == "demo" || $group == "bottom") {
   //render_box_top($group == "demo" ? "demo" : "print", 0) {
-    add_front_port_bottom([15,0,15], 0)  {
-      arrow_up();
-      box_bottom(0);
-    }
+  add_front_port_bottom([15,0,15], 0)  {
+    arrow_up();
+    box_bottom(0);
+  }
   //}
 }
 /*if ($group == "demo" || $group == "bottom") {

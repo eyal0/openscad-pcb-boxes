@@ -1,5 +1,5 @@
 module box_bottom(level) {
-  if ($level != level) {
+  if ($level != level && $level != -1) {
   } else {
     if (!$box_size) {
       echo("ERROR: $box_size not defined in box_bottom");
@@ -25,11 +25,15 @@ module box_bottom(level) {
 }
 
 module render_box_bottom(style, level) {
-  if ($level != level) {
+  if ($level != level && $level != -1) {
     children();
   } else {
     if (style == "print" || style == "demo") {
-      import($import_filename);
+      if ($level == -1) {
+        children();
+      } else {
+        import($import_filename);
+      }
     }
   }
 }
