@@ -52,6 +52,7 @@ module add_front_port_top(port_offset, level) {
             children(0);
           }
         }
+        // for the overlapping section, half thickness.
         project_to_xy() {
           front_port_hole(port_offset, offset=1, $thickness=$thickness/2+$static_clearance/2) {
             children(0);
