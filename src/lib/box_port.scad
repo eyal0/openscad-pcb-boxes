@@ -8,11 +8,11 @@ use <upsidedown.scad>;
 // it is off the top of the pcb.
 
 // Made as thick as tab_thickness and padded by $epsilon on both sides.
-module front_port_hole(port_offset, tab_thickness) {
+module front_port_hole(port_offset, tab_thickness, tab_padding) {
   // Make the hole for the port.
-  translate([port_offset[0], tab_thickness+$epsilon, port_offset[2]]) {
+  translate([port_offset[0], tab_thickness+tab_padding, port_offset[2]]) {
     rotate([90,0,0]) {
-      linear_extrude(tab_thickness+2*$epsilon) {
+      linear_extrude(tab_thickness+2*tab_padding) {
         children();
       }
     }
@@ -21,7 +21,7 @@ module front_port_hole(port_offset, tab_thickness) {
 $epsilon=0.3;
 // Extends the 3d shape down to the xy plane, extending below by extend_below.
 module project_to_xy(extend_below) {
-  union() {
+  !union() {
     children();
     difference() {
       hull() {
@@ -36,7 +36,10 @@ module project_to_xy(extend_below) {
       }
       translate([0,0,2*$epsilon])
       minkowski() {
-        sphere(r=$epsilon);
+        //sphere(r=$epsilon);
+        translate([-$epsilon, -$epsilon, -$epsilon]) {
+          cube([2*$epsilon,2*$epsilon,2*$epsilon]);
+        }
         hull() {
           children();
           translate([0,0,$box_size[2]]) {
@@ -53,18 +56,18 @@ module project_to_xy(extend_below) {
 }
 
 // Project the child down to xy but without the original child.
-module tab_without_lap(port_offset, tab_thickness, extend_below) {
+module tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
   difference() {
     project_to_xy(extend_below) {
       front_port_hole(port_offset,
-                      tab_thickness) {
+                      tab_thickness, tab_padding) {
         children(0);
       }
     }
     minkowski() {
       sphere(r=$epsilon);
       front_port_hole(port_offset,
-                      tab_thickness) {
+                      tab_thickness, tab_padding) {
         children(0);
       }
     }
@@ -73,19 +76,21 @@ module tab_without_lap(port_offset, tab_thickness, extend_below) {
 
 // Create the left or right most edge of the child.
 // direction is "left" or "right"
-module lap_strip(port_offset, tab_thickness, direction, extend_below) {
+module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
   shift = direction=="left" ? $epsilon : -$epsilon;
   difference() {
-    tab_without_lap(port_offset,tab_thickness,extend_below) {
+    tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
       children(0);
     }
     translate([shift, -$epsilon, $epsilon]) {
-      tab_without_lap(port_offset,tab_thickness+2*$epsilon, extend_below) {
+      hull()
+      tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
         children(0);
       }
     }
     translate([shift, -$epsilon, -$epsilon]) {
-      tab_without_lap(port_offset,tab_thickness+2*$epsilon, extend_below) {
+      hull()
+      tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
         children(0);
       }
     }
@@ -94,14 +99,14 @@ module lap_strip(port_offset, tab_thickness, direction, extend_below) {
 
 // Create the rightmost or leftmost edge of the child, extended to
 // $thickness width..
-module lap(port_offset, tab_thickness, direction, extend_below) {
+module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
   shift = direction=="left" ? -$thickness : $thickness;
   hull() {
-    lap_strip(port_offset, tab_thickness, direction, extend_below) {
+    lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
       children(0);
     }
     translate([shift,0,0]) {
-      lap_strip(port_offset, tab_thickness, direction, extend_below) {
+      lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
         children(0);
       }
     }
@@ -109,18 +114,19 @@ module lap(port_offset, tab_thickness, direction, extend_below) {
 }
 
 // Project child to xy and add side wings in x on both sides.
-module tab_with_lap(port_offset, tab_thickness, extend_below) {
-  lap(port_offset, tab_thickness, "left", extend_below) {
+module tab_with_lap(port_offset, tab_thickness, tab_padding, extend_below) {
+  lap(port_offset, tab_thickness, tab_padding, "left", extend_below) {
     children(0);
   }
-  lap(port_offset, tab_thickness, "right", extend_below) {
+  lap(port_offset, tab_thickness, tab_padding, "right", extend_below) {
     children(0);
   }
-  tab_without_lap(port_offset, tab_thickness, extend_below) {
+  tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
     children(0);
   }
 }
 
+//$epsilon=0.3;
 // First child should be a two-dimensional shape to cut out of the
 // front of the box.  port_offset should have only positive y and z
 // values.
@@ -131,16 +137,19 @@ module add_front_port_top(port_offset, level) {
     difference() {
       children([1:$children-1]);
       render_box_top("demo", level) {
-        project_to_xy($epsilon) {
-          front_port_hole(port_offset, $thickness) {
+        union() {
+          project_to_xy($epsilon) {
+            front_port_hole(port_offset, $thickness, $epsilon) {
+              children(0);
+            }
+          }
+          // For the overlapping section, half thickness.
+          tab_with_lap(port_offset,
+                       $thickness/2+$static_clearance/2,
+                       $epsilon,
+                       $epsilon) {
             children(0);
           }
-        }
-        // For the overlapping section, half thickness.
-        tab_with_lap(port_offset,
-                     $thickness/2+$static_clearance/2,
-                     $epsilon) {
-          children(0);
         }
       }
     }
@@ -158,7 +167,7 @@ module add_front_port_bottom(port_offset, level) {
       tab_without_lap(port_offset, $thickness, 0) {
         children(0);
       }
-      tab_with_lap(port_offset, $thickness/2-$static_clearance/2, 0) {
+      tab_with_lap(port_offset, $thickness/2-$static_clearance/2, 0, 0) {
         children(0);
       }
     }
