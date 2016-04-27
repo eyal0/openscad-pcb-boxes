@@ -18,15 +18,34 @@ module front_port_hole(port_offset, tab_thickness) {
     }
   }
 }
-
+$epsilon=0.3;
 // Extends the 3d shape down to the xy plane, extending below by extend_below.
 module project_to_xy(extend_below) {
-  hull() {
+  union() {
     children();
-    translate([0,0,-extend_below]) {
-      linear_extrude($epsilon) {
-        projection() {
+    difference() {
+      hull() {
+        children();
+        translate([0,0,-extend_below]) {
+          linear_extrude($epsilon) {
+            projection() {
+              children();
+            }
+          }
+        }
+      }
+      translate([0,0,2*$epsilon])
+      minkowski() {
+        sphere(r=$epsilon);
+        hull() {
           children();
+          translate([0,0,$box_size[2]]) {
+            linear_extrude($epsilon) {
+              projection() {
+                children();
+              }
+            }
+          }
         }
       }
     }
