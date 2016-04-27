@@ -34,7 +34,7 @@ module project_to_xy(extend_below) {
           }
         }
       }
-      translate([0,$epsilon,0]) {
+      translate([0,$epsilon,$epsilon]) {
         hull() {
           children();
           translate([0,0,$box_size[2]]) {
@@ -46,7 +46,7 @@ module project_to_xy(extend_below) {
           }
         }
       }
-      translate([0,-$epsilon,0]) {
+      translate([0,-$epsilon,$epsilon]) {
         hull() {
           children();
           translate([0,0,$box_size[2]]) {
