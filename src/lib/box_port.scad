@@ -7,12 +7,12 @@ use <upsidedown.scad>;
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
 
-// Made as wide as $thickness and padded by $epsilon on both sides.
-module front_port_hole(port_offset) {
+// Made as thick as tab_thickness and padded by $epsilon on both sides.
+module front_port_hole(port_offset, tab_thickness) {
   // Make the hole for the port.
-  translate([port_offset[0], $thickness+$epsilon, port_offset[2]]) {
+  translate([port_offset[0], tab_thickness+$epsilon, port_offset[2]]) {
     rotate([90,0,0]) {
-      linear_extrude($thickness+2*$epsilon) {
+      linear_extrude(tab_thickness+2*$epsilon) {
         children();
       }
     }
@@ -33,6 +33,75 @@ module project_to_xy(extend_below) {
   }
 }
 
+// Project the child down to xy but without the original child.
+module tab_without_lap(port_offset, tab_thickness, extend_below) {
+  difference() {
+    project_to_xy(extend_below) {
+      front_port_hole(port_offset,
+                      tab_thickness) {
+        children(0);
+      }
+    }
+    minkowski() {
+      sphere(r=$epsilon);
+      front_port_hole(port_offset,
+                      tab_thickness) {
+        children(0);
+      }
+    }
+  }
+}
+
+// Create the left or right most edge of the child.
+// direction is "left" or "right"
+module lap_strip(port_offset, tab_thickness, direction, extend_below) {
+  shift = direction=="left" ? $epsilon : -$epsilon;
+  difference() {
+    tab_without_lap(port_offset,tab_thickness,extend_below) {
+      children(0);
+    }
+    translate([shift, -$epsilon, $epsilon]) {
+      tab_without_lap(port_offset,tab_thickness+2*$epsilon, extend_below) {
+        children(0);
+      }
+    }
+    translate([shift, -$epsilon, -$epsilon]) {
+      tab_without_lap(port_offset,tab_thickness+2*$epsilon, extend_below) {
+        children(0);
+      }
+    }
+  }
+}
+
+// Create the rightmost or leftmost edge of the child, extended to
+// $thickness width..
+module lap(port_offset, tab_thickness, direction, extend_below) {
+  shift = direction=="left" ? -$thickness : $thickness;
+  hull() {
+    lap_strip(port_offset, tab_thickness, direction, extend_below) {
+      children(0);
+    }
+    translate([shift,0,0]) {
+      lap_strip(port_offset, tab_thickness, direction, extend_below) {
+        children(0);
+      }
+    }
+  }
+}
+
+// Project child to xy and add side wings in x on both sides.
+module tab_with_lap(port_offset, tab_thickness, extend_below) {
+  lap(port_offset, tab_thickness, "left", extend_below) {
+    children(0);
+  }
+  lap(port_offset, tab_thickness, "right", extend_below) {
+    children(0);
+  }
+  tab_without_lap(port_offset, tab_thickness, extend_below) {
+    children(0);
+  }
+}
+
 // First child should be a two-dimensional shape to cut out of the
 // front of the box.  port_offset should have only positive y and z
 // values.
@@ -43,26 +112,16 @@ module add_front_port_top(port_offset, level) {
     difference() {
       children([1:$children-1]);
       render_box_top("demo", level) {
-        project_to_xy(extend_below=$epsilon) {
-          front_port_hole(port_offset) {
+        project_to_xy($epsilon) {
+          front_port_hole(port_offset, $thickness) {
             children(0);
           }
         }
         // For the overlapping section, half thickness.
-        minkowski() {  //Minkowski seems to solve the non-manifold faces.
-         scale([$thickness/$epsilon,0,0]) sphere(r=$epsilon);
-          difference() {
-            project_to_xy(extend_below=$epsilon) {
-              front_port_hole(port_offset,
-                              $thickness=$thickness/2+$static_clearance/2) {
-                children(0);
-              }
-            }
-            front_port_hole(port_offset,
-                            $thickness=$thickness/2+$static_clearance) {
-              children(0);
-            }
-          }
+        tab_with_lap(port_offset,
+                     $thickness/2+$static_clearance/2,
+                     $epsilon) {
+          children(0);
         }
       }
     }
@@ -76,52 +135,22 @@ module add_front_port_bottom(port_offset, level) {
     children([1:$children-1]);
   } else {
     children([1:$children-1]);
-    difference() {
-      union() {
-        project_to_xy() {
-          front_port_hole(port_offset, $epsilon=0) {
-            children(0);
-          }
-        }
-        // For the overlapping section, half thickness.
-        !difference() {
-          minkowski() {  //Minkowski seems to solve the non-manifold faces.
-            scale([$thickness/$epsilon,0,0]) sphere(r=$epsilon);
-            project_to_xy() {
-              front_port_hole(port_offset,
-                              $thickness=$thickness/2-$static_clearance/2,
-                              $epsilon=0) {
-                children(0);
-              }
-            }
-          }
-          minkowski() {  //Minkowski seems to solve the non-manifold faces.
-            //scale([$thickness/$epsilon,0,0]) sphere(r=$epsilon);
-            front_port_hole(port_offset,
-                            $thickness=$thickness/2-$static_clearance/2,
-                            $epsilon=0) {
+    union() {
+      tab_without_lap(port_offset, $thickness, 0) {
+        children(0);
+      }
+      tab_with_lap(port_offset, $thickness/2-$static_clearance/2, 0) {
+        children(0);
+      }
+    }
+    translate([0,0,$thickness]) {
+      rotate([-90,0,0]) {
+        linear_extrude($thickness + $static_clearance + $epsilon) {
+          projection() {
+            front_port_hole(port_offset, $thickness, $epsilon=0) {
               children(0);
             }
           }
-        }
-      }
-      minkowski() {  //Minkowski seems to solve the non-manifold faces.
-        sphere(r=$epsilon);
-        minkowski() {
-          scale([$thickness/$epsilon+$epsilon,0,0]) sphere(r=$epsilon);
-          front_port_hole(port_offset
-                          //$thickness=$thickness/2-$static_clearance/2
-                          ) {
-            children(0);
-          }
-        }
-      }
-    }
-    translate([0,0,$thickness]) rotate([-90,0,0])
-    linear_extrude($thickness + $static_clearance + $epsilon) {
-      projection() {
-        front_port_hole(port_offset) {
-          children(0);
         }
       }
     }
