@@ -10,16 +10,17 @@ $box_size = [100,50,30];
 $inner_thickness = 1;
 $rounding = 0.5;
 module arrow_up() {
-    polygon(points=[
-              [0, 0],
-              [5,0],
-              [0,9]],
-            paths=[
+  //circle(r=5);
+  polygon(points=[
+      [0,0],
+      [9,5],
+      [0,5]],
+          paths=[
               [0,1,2]
-              ]
-      );
+                 ]
+          );
 }
-$fn=60;
+$fn=20;
 $group = "top";
 $level = -1;
 if ($group == "demo" || $group == "top") {
