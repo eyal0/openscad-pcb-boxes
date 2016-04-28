@@ -24,23 +24,23 @@ module arrow_up() {
           );*/
 }
 $fn=20;
-$group = "bottom";
+$group = "top";
 $level = -1;
 if ($group == "demo" || $group == "top") {
-  //render_box_top($group == "demo" ? "demo" : "print", 0) {
-  add_front_port_top([15,0,15], 0) {
-    arrow_up();
-    box_top(0);
+  render_box_top($group == "demo" ? "demo" : "print", 2) {
+    add_front_port_top([15,0,15], 1) {
+      arrow_up();
+      box_top(0);
+    }
   }
-  //}
 }
 if ($group == "demo" || $group == "bottom") {
-  //render_box_top($group == "demo" ? "demo" : "print", 0) {
-  add_front_port_bottom([15,0,15], 0)  {
-    arrow_up();
-    box_bottom(0);
+  render_box_bottom($group == "demo" ? "demo" : "print", 2) {
+    add_front_port_bottom([15,0,15], 1)  {
+      arrow_up();
+      box_bottom(0);
+    }
   }
-  //}
 }
 /*if ($group == "demo" || $group == "bottom") {
   render_box_bottom($group == "demo" ? "demo" : "print", 0) {

@@ -1,6 +1,5 @@
 use <box_top.scad>;
 use <upsidedown.scad>;
-use <utils.scad>;
 
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
@@ -104,13 +103,13 @@ module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_belo
     translate([shift, -$epsilon, $epsilon]) {
       hull() // For some reason, this helps remove an artifact in the bottom.
         tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
-          children(0);
+          children();
       }
     }
     translate([shift, -$epsilon, -$epsilon]) {
       hull() // For some reason, this helps remove an artifact in the bottom.
       tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
-        children(0);
+        children();
       }
     }
   }
@@ -122,11 +121,11 @@ module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
   shift = direction=="left" ? -$thickness : $thickness;
   hull() {
     lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-      children(0);
+      children();
     }
     translate([shift,0,0]) {
       lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-        children(0);
+        children();
       }
     }
   }
@@ -135,13 +134,13 @@ module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
 // Project child to xy and add side wings in x on both sides.
 module tab_with_lap(port_offset, tab_thickness, tab_padding, extend_below) {
   lap(port_offset, tab_thickness, tab_padding, "left", extend_below) {
-    children(0);
+    children();
   }
   lap(port_offset, tab_thickness, tab_padding, "right", extend_below) {
-    children(0);
+    children();
   }
   tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
-    children(0);
+    children();
   }
 }
 
@@ -154,8 +153,12 @@ module add_front_port_top(port_offset, level) {
     children([1:$children-1]);
   } else {
     difference() {
-      children([1:$children-1]);
-      render_box_top("demo", level) {
+      if ($level == -1) {
+        children([1:$children-1]);
+      } else {
+        import($import_filename);
+      }
+      render_box_top("demo", -1) {
         union() {
           project_to_xy($epsilon) {
             front_port_hole(port_offset, $thickness, $epsilon) {
@@ -181,7 +184,11 @@ module add_front_port_bottom(port_offset, level) {
   if ($level != level && $level != -1) {
     children([1:$children-1]);
   } else {
-    children([1:$children-1]);
+    if ($level == -1) {
+      children([1:$children-1]);
+    } else {
+      import($import_filename);
+    }
     union() {
       tab_without_lap(port_offset, $thickness, 0) {
         children(0);

@@ -153,10 +153,13 @@ if ($group == "demo" || $group == "top") {
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print", 9) {
-    add_bottom_support_posts() {
-      add_screw_holes_in_corners(screw_type) {
-        box_bottom(0);
+  render_box_bottom($group == "demo" ? "demo" : "print", 10) {
+    add_front_port_bottom([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 9) {
+      circle(r=12.25/2+$static_clearance);
+      add_bottom_support_posts() {
+        add_screw_holes_in_corners(screw_type) {
+          box_bottom(0);
+        }
       }
     }
   }

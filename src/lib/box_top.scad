@@ -42,11 +42,11 @@ module box_top(level) {
 }
 
 module render_box_top(style, level) {
-  if ($level != level && $level != -1) {
+  if ($level != level && $level != -1 && level != -1) {
     children();
   } else {
     if (style == "print") {
-      if ($level == -1) {
+      if ($level == -1 || level == -1) {
         children();
       } else {
         import($import_filename);
@@ -59,7 +59,7 @@ module render_box_top(style, level) {
       }
       translate([0, $box_size[1], $box_size[2]]) {
         rotate([180,0,0]) {
-          if ($level == -1) {
+          if ($level == -1 || level == -1) {
             children();
           } else {
             import($import_filename);

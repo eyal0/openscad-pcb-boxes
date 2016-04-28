@@ -158,5 +158,5 @@ scad_scan = Scanner(function = scad_scan, skeys = ['.scad'])
 env.Append(SCANNERS = scad_scan)
 
 Export('env openscad2 openscad_counter')
-conscripts = [dir + '/SConscript' for dir in ['esr_tester', 'holes_demo', 'function_generator', 'box_screw_post_demo', 'box_button_demo', 'box_screen_demo']]
+conscripts = [dir + '/SConscript' for dir in ['esr_tester', 'holes_demo', 'function_generator', 'box_screw_post_demo', 'box_button_demo', 'box_screen_demo', 'box_port_demo']]
 SConscript(conscripts)
