@@ -102,13 +102,13 @@ module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_belo
       }
     }*/
     translate([shift, -$epsilon, $epsilon]) {
-      //hull() // For some reason, this helps remove an artifact.
+      hull() // For some reason, this helps remove an artifact in the bottom.
         tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
           children(0);
       }
     }
     translate([shift, -$epsilon, -$epsilon]) {
-      //hull() // For some reason, this helps remove an artifact.
+      hull() // For some reason, this helps remove an artifact in the bottom.
       tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
         children(0);
       }
