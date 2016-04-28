@@ -23,8 +23,8 @@ module arrow_up() {
                  ]
           );*/
 }
-$fn=30;
-$group = "top";
+$fn=20;
+$group = "bottom";
 $level = -1;
 if ($group == "demo" || $group == "top") {
   //render_box_top($group == "demo" ? "demo" : "print", 0) {

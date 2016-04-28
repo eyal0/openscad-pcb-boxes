@@ -1,5 +1,6 @@
 use <box_top.scad>;
 use <upsidedown.scad>;
+use <utils.scad>;
 
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
@@ -18,7 +19,8 @@ module front_port_hole(port_offset, tab_thickness, tab_padding) {
     }
   }
 }
-$epsilon=0.3;
+
+//$epsilon=0.3;
 // Extends the 3d shape down to the xy plane, extending below by extend_below.
 module project_to_xy(extend_below) {
   union() {
@@ -68,18 +70,20 @@ module tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
     project_to_xy(extend_below) {
       front_port_hole(port_offset,
                       tab_thickness, tab_padding) {
-        children(0);
+        children();
       }
     }
-    minkowski() {
+    minkowski(convexity=10) {
       sphere(r=$epsilon);
       front_port_hole(port_offset,
                       tab_thickness, tab_padding) {
-        children(0);
+        children();
       }
     }
   }
 }
+
+//$epsilon=0.1;
 
 // Create the left or right most edge of the child.
 // direction is "left" or "right"
@@ -87,23 +91,31 @@ module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_belo
   shift = direction=="left" ? $epsilon : -$epsilon;
   difference() {
     tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
-      children(0);
+      children();
     }
+    /*minkowski(convexity=10) {
+      sphere(r=$epsilon);
+      translate([shift, 0,0]) {
+        tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
+          children();
+        }
+      }
+    }*/
     translate([shift, -$epsilon, $epsilon]) {
-      hull()
-      tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
-        children(0);
+      //hull() // For some reason, this helps remove an artifact.
+        tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
+          children(0);
       }
     }
     translate([shift, -$epsilon, -$epsilon]) {
-      hull()
+      //hull() // For some reason, this helps remove an artifact.
       tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
         children(0);
       }
     }
   }
 }
-
+//$epsilon=0.01;
 // Create the rightmost or leftmost edge of the child, extended to
 // $thickness width..
 module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
@@ -182,7 +194,7 @@ module add_front_port_bottom(port_offset, level) {
       rotate([-90,0,0]) {
         linear_extrude($thickness + $static_clearance + $epsilon) {
           projection() {
-            front_port_hole(port_offset, $thickness, $epsilon=0) {
+            front_port_hole(port_offset, $thickness, $epsilon) {
               children(0);
             }
           }
