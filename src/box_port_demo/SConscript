@@ -1,0 +1,15 @@
+#!python
+
+Import('env openscad2 openscad_counter')
+
+parts = {'top': 2,
+         'bottom': 2}
+
+for part in parts:
+  openscad_counter(target='box_port_demo_' + part,
+                   source=['box_port_demo'], counter=parts[part])
+
+env.Alias('box_port_demo',
+          ['box_port_demo_' + part + suffix
+           for part in parts
+           for suffix in ['.stl']])
