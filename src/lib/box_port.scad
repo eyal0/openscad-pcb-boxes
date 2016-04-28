@@ -194,7 +194,7 @@ module add_front_port_bottom(port_offset, level) {
       rotate([-90,0,0]) {
         linear_extrude($thickness + $static_clearance + $epsilon) {
           projection() {
-            front_port_hole(port_offset, $thickness, $epsilon) {
+            front_port_hole(port_offset, $thickness, 0) {
               children(0);
             }
           }
