@@ -62,7 +62,7 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, lev
           }
           // fitting hex indentation
           translate([0,0,post_height-fitting_hex_thickness]) {
-            rotate(360/12) {
+            rotate(90) {
               cylinder(h=fitting_hex_thickness+$epsilon, r=screw("nut_diameter")/2+$static_clearance*2/sqrt(3),$fn=6);
             }
           }
@@ -150,7 +150,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
               // post
               cylinder(h=post_height, r=post_radius);
               // fixing hex stub
-              rotate(360/12) {
+              rotate(90) {
                 cylinder(h=fitting_hex_height,
                          r=screw("nut_diameter")/2,
                          $fn=6);
@@ -168,7 +168,7 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
               }
               // nut pocket
               translate([0,0,post_height-$thickness-nut_pocket_height]) {
-                rotate(360/12) {
+                rotate(90) {
                   cylinder(h=nut_pocket_height,
                            r=nut_radius_with_dynamic_clearance,
                            $fn=6);

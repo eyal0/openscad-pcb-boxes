@@ -3,8 +3,8 @@ import itertools
 
 Import('env openscad2 openscad_counter')
 
-parts = {'top': 3,
-         'bottom': 3}
+parts = {'top': 4,
+         'bottom': 4}
 
 for part in parts:
   openscad_counter(target='box_screw_post_demo_' + part,

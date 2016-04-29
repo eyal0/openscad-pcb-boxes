@@ -78,6 +78,10 @@ def add_sorted_to_filename(filename):
   base, ext = os.path.splitext(filename)
   return ''.join([base, "_sorted", ext])
 
+def change_extension_to_csg(filename):
+  base, ext = os.path.splitext(filename)
+  return ''.join([base, ".csg"])
+
 def openscad_counter(target, source, counter):
   if '.' in str(target):
     targets = [str(target)]
@@ -93,7 +97,16 @@ def openscad_counter(target, source, counter):
         group = str(t).split("_")[-1].split(".")[0]
         #print t,s,i,group
 
-        openscad_input = [s]
+        csg_input = [s]
+        if i > 0:
+          csg_input += [add_counter_to_filename(t, i-1)]
+
+        if i < counter - 1:
+          csg_output = change_extension_to_csg(add_counter_to_filename(t, i))
+        else:
+          csg_output = change_extension_to_csg(t)
+
+        openscad_input = [csg_output]
         if i > 0:
           openscad_input += [add_counter_to_filename(t, i-1)]
 
@@ -119,6 +132,15 @@ def openscad_counter(target, source, counter):
         env.FilterStl(meshlab_output, [meshlab_input, meshlab_filter_script])
 
         env.SortStl(stl_sorter_output, stl_sorter_input)
+
+        args = [
+            '-D', ('$group="' + group + '"'),
+            '-D', '$fn=' + str(GetOption('fn')),
+            '-D', ('$level=' + str(i)),
+            '--viewall', '--autocenter', '--render']
+        if len(csg_input) > 1:
+          args += ['-D', ('$import_filename="' + str(env.File(csg_input[1]).abspath) + '"')]
+        env.Openscad(target=csg_output,source=csg_input,ARGS=args,COUNTER=counter)
 
         args = [
             '-D', ('$group="' + group + '"'),
