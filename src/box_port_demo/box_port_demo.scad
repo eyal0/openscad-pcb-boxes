@@ -24,7 +24,7 @@ module arrow_up() {
           );*/
 }
 $fn=20;
-$group = "top";
+$group = "bottom";
 $level = -1;
 if ($group == "demo" || $group == "top") {
   render_box_top($group == "demo" ? "demo" : "print", 2) {

@@ -1,6 +1,8 @@
+use <import_children.scad>;
+
 module box_bottom(level) {
-  if ($level != level && $level != -1) {
-  } else {
+  level_preamble(level) {
+    union() {}
     if (!$box_size) {
       echo("ERROR: $box_size not defined in box_bottom");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -25,14 +27,11 @@ module box_bottom(level) {
 }
 
 module render_box_bottom(style, level) {
-  if ($level != level && $level != -1) {
+  level_preamble(level) {
     children();
-  } else {
     if (style == "print" || style == "demo") {
-      if ($level == -1) {
+      level_import(level) {
         children();
-      } else {
-        import($import_filename);
       }
     }
   }

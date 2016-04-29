@@ -1,4 +1,5 @@
 use <upsidedown.scad>;
+use <import_children.scad>;
 
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
@@ -7,9 +8,8 @@ use <upsidedown.scad>;
 // it is off the top of the pcb.
 
 module add_top_button_hole(button_offset, button_height, level) {
-  if ($level != level) {
+  level_preamble(level) {
     children([1:$children-1]);
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_top_button_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -33,7 +33,9 @@ module add_top_button_hole(button_offset, button_height, level) {
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
     difference() {
-      import($import_filename);
+      level_import(level) {
+        children([1:$children-1]);
+      }
       // Subtract a hole for the button.
       translate(button_offset + [0,0,-$epsilon])  {
         linear_extrude(height=$thickness+2*$epsilon, convexity=10) {
@@ -49,7 +51,9 @@ module add_top_button_hole(button_offset, button_height, level) {
       intersection() { //intersection so that the hole's supports aren't sticking out of the box top.
         translate(-button_offset) {
           hull() {
-            import($import_filename);
+            level_import(level) {
+              children([1:$children-1]);
+            }
           }
         }
         linear_extrude(height=$pcb_top_clearance-button_height-2*$static_clearance+$thickness-$inner_thickness, convexity=10) {
@@ -79,8 +83,8 @@ use <box_top.scad>;  // to put it in the right place for the box top
 // smaller size.  The rest is the box.  The button_height is how high
 // it is off the top of the pcb.
 module add_button(button_offset, button_height, level) {
-  if ($level != level) {
-  } else {
+  level_preamble(level) {
+    union() {}
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_button");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();

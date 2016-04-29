@@ -1,12 +1,13 @@
+use <import_children.scad>;
+
 // screen_height is the height from the pcb top for the screen.
 // screen_offset is the offset of the screen from the bottom left
 // corner of the box when upside-down.  First child is the 2D shape of
 // the screen to expose.
 
 module add_top_screen_hole(screen_offset, screen_height, level) {
-  if ($level != level) {
+  level_preamble(level) {
     children([1:$children-1]);
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_top_button_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -28,7 +29,9 @@ module add_top_screen_hole(screen_offset, screen_height, level) {
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
     difference() {
-      import($import_filename);
+      level_import(level) {
+        children([1:$children-1]);
+      }
       translate(screen_offset-[0,0,$epsilon]) {
         linear_extrude($thickness+2*$epsilon+$pcb_top_clearance-screen_height-$static_clearance, convexity=10) {
           offset(r=$thickness) {
@@ -39,7 +42,9 @@ module add_top_screen_hole(screen_offset, screen_height, level) {
     }
     intersection() { //intersection so that the screen hole sides aren't outside the box size.
       hull() {
-        import($import_filename);
+        level_import(level) {
+          children([1:$children-1]);
+        }
       }
       translate(screen_offset) {
         intersection() {

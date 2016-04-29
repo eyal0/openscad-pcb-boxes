@@ -1,5 +1,6 @@
 use <box_top.scad>;
 use <upsidedown.scad>;
+use <import_children.scad>;
 
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
@@ -149,14 +150,11 @@ module tab_with_lap(port_offset, tab_thickness, tab_padding, extend_below) {
 // front of the box.  port_offset should have only positive y and z
 // values.
 module add_front_port_top(port_offset, level) {
-  if ($level != level && $level != -1) {
+  level_preamble(level) {
     children([1:$children-1]);
-  } else {
     difference() {
-      if ($level == -1) {
+      level_import(level) {
         children([1:$children-1]);
-      } else {
-        import($import_filename);
       }
       render_box_top("demo", -1) {
         union() {
@@ -181,13 +179,10 @@ module add_front_port_top(port_offset, level) {
 //$epsilon=0.5;
 
 module add_front_port_bottom(port_offset, level) {
-  if ($level != level && $level != -1) {
+  level_preamble(level) {
     children([1:$children-1]);
-  } else {
-    if ($level == -1) {
+    level_import(level) {
       children([1:$children-1]);
-    } else {
-      import($import_filename);
     }
     union() {
       tab_without_lap(port_offset, $thickness, 0) {

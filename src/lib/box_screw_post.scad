@@ -1,5 +1,6 @@
 use <screws.scad>;
 use <upsidedown.scad>;
+use <import_children.scad>;
 
 function screw_hole_post_radius(screw_type) = get_screw_param(screw_type, "screw_head_diameter")/2 + $static_clearance + $thickness;
 function screw_post_radius(screw_type) = get_screw_param(screw_type, "nut_diameter")/2 + $dynamic_clearance*2/sqrt(3) + $thickness; // matching post_radius below
@@ -14,9 +15,8 @@ function screw_posts_max_radius(screw_type) =
 // screw_center_offset should be relative to bottom-left corner of the box bottom when upright.
 module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, level) {
   function screw(p) = get_screw_param(screw_type, p);
-  if ($level != level) {
+  level_preamble(level) {
     children();
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness not defined in add_screw_hole");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -41,7 +41,9 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, lev
 
     difference() {
       union() {
-        import($import_filename);
+        level_import(level) {
+          children();
+        }
         translate(upsidedown_offset(screw_center_offset)) {
           rotate(upsidedown_angle(-90+nut_opening_rotation)) {
             // post
@@ -75,9 +77,8 @@ module add_screw_hole(screw_center_offset, screw_type, nut_opening_rotation, lev
 // post_center_offset should be relative to bottom-left corner of the box top when upside-down.
 module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, level) {
   function screw(p) = get_screw_param(screw_type, p);
-  if ($level != level) {
+  level_preamble(level) {
     children();
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness not defined in add_screw_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -131,13 +132,17 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
     nut_opening_height = post_height-2*$thickness-2*$static_clearance - nut_pit_height - nut_dome_height;
 
     nut_pocket_height = 2*$static_clearance + nut_pit_height + nut_dome_height + nut_opening_height;
-    import($import_filename);
+    level_import(level) {
+      children();
+    }
     translate(post_center_offset) {
       difference() {
         intersection() { //intersection so that the post isn't sticking out of the box top.
           translate(-post_center_offset) {
             hull() {
-              import($import_filename);
+              level_import(level) {
+                children();
+              }
             }
           }
           rotate(-90+nut_opening_rotation) {
@@ -180,7 +185,9 @@ module add_screw_post(post_center_offset, screw_type, nut_opening_rotation, leve
               }
             }
             translate(-post_center_offset) {
-              import($import_filename);
+              level_import(level) {
+                children();
+              }
             }
           }
         }

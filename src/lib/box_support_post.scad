@@ -1,4 +1,5 @@
 use <upsidedown.scad>;
+use <import_children.scad>;
 
 // post_center_offset should be relative to bottom-left corner of the
 // box top when upside-down.
@@ -6,9 +7,8 @@ use <upsidedown.scad>;
 // inside of the box.  Any parts sticking above $pcb_top_clearance
 // will require a hole in the top of the box.
 module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
-  if ($level != level) {
+  level_preamble(level) {
     children();
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_top_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -25,7 +25,9 @@ module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
       echo("ERROR: $static_clearance is not set in add_top_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    import($import_filename);
+    level_import(level) {
+      children();
+    }
     // Height of the post that supports the stub.
     post_height = $thickness + $pcb_top_clearance - $static_clearance;
     // Height of the stub including post height.
@@ -37,7 +39,9 @@ module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
       intersection() { //intersection so that the post isn't sticking out of the box top.
         translate(-post_center_offset) {
           hull() {
-            import($import_filename);
+            level_import(level) {
+              children();
+            }
           }
         }
         union() {
@@ -53,9 +57,8 @@ module add_top_support_post(post_center_offset, pcb_hole_diameter, level) {
 
 // post_center_offset should be relative to bottom-left corner of the box when right-side up.
 module add_bottom_support_post(post_center_offset, pcb_hole_diameter, level) {
-  if ($level != level) {
+  level_preamble(level) {
     children();
-  } else {
     if (!$thickness) {
       echo("ERROR: $thickness is not set in add_bottom_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -80,7 +83,9 @@ module add_bottom_support_post(post_center_offset, pcb_hole_diameter, level) {
       echo("ERROR: $epsilon is not set in add_bottom_support_post");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
     }
-    import($import_filename);
+    level_import(level) {
+      children();
+    }
     // Height of the post that accepts the stub.
     // Box outer height - post height of screw hole - pcb thickness - offset if post is floating
     post_height = $box_size[2] -

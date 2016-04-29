@@ -1,9 +1,11 @@
+use <import_children.scad>;
+
 // Creates a rounded box top with a flat bottom.
 // Assumes $thickness, $epsilon.
 // Aligned so that the box is upside-down from usage and the inner box lines up with X and Y and Z.
 module box_top(level) {
-  if ($level != level && $level != -1) {
-  } else {
+  level_preamble(level) {
+    union() {}
     if (!$box_size) {
       echo("ERROR: $box_size not defined in box_top");
       UNDEFINED_DYNAMIC_VARIABLE_ERROR();
@@ -42,14 +44,11 @@ module box_top(level) {
 }
 
 module render_box_top(style, level) {
-  if ($level != level && $level != -1 && level != -1) {
+  level_preamble(level) {
     children();
-  } else {
     if (style == "print") {
-      if ($level == -1 || level == -1) {
+      level_import(level) {
         children();
-      } else {
-        import($import_filename);
       }
     }
     if (style == "demo") {
@@ -59,10 +58,8 @@ module render_box_top(style, level) {
       }
       translate([0, $box_size[1], $box_size[2]]) {
         rotate([180,0,0]) {
-          if ($level == -1 || level == -1) {
+          level_import(level) {
             children();
-          } else {
-            import($import_filename);
           }
         }
       }
