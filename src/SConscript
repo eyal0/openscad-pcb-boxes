@@ -74,6 +74,10 @@ def add_unfiltered_to_filename(filename):
   base, ext = os.path.splitext(filename)
   return ''.join([base, "_unfiltered", ext])
 
+def add_sorted_to_filename(filename):
+  base, ext = os.path.splitext(filename)
+  return ''.join([base, "_sorted", ext])
+
 def openscad_counter(target, source, counter):
   if '.' in str(target):
     targets = [str(target)]
@@ -98,27 +102,23 @@ def openscad_counter(target, source, counter):
         else:
           openscad_output = add_unfiltered_to_filename(t)
 
-        meshlab_input = openscad_output
+        stl_sorter_input = [openscad_output, stl_sorter_binary]
+
+        if i < counter - 1:
+          stl_sorter_output = add_sorted_to_filename(add_counter_to_filename(t, i))
+        else:
+          stl_sorter_output = add_sorted_to_filename(t)
+
+        meshlab_input = stl_sorter_output
 
         if i < counter - 1:
           meshlab_output = add_counter_to_filename(t, i)
         else:
           meshlab_output = t
 
-        #filename = os.path.splitext(env.File(t).abspath)[0]
-        ##TODO: use Dir() below
-        #  out_file = t.split(".")[0] + "_" + str(i) + "_unfiltered." + t.split(".")[1]
-        #else :
-        #  out_file = t.split(".")[0] + "_unfiltered." + t.split(".")[1]
-        #
-        #t_outfile = env.File(t).abspath
-        #meshlab_input = ''.join(out_file.split("_unfiltered"))
-        #meshlab_output = out_file
         env.FilterStl(meshlab_output, [meshlab_input, meshlab_filter_script])
-        #
-        #in_files = [s]
-        #if i > 0:
-        #  in_files += [meshlab_output]
+
+        env.SortStl(stl_sorter_output, stl_sorter_input)
 
         args = [
             '-D', ('$group="' + group + '"'),
@@ -127,7 +127,6 @@ def openscad_counter(target, source, counter):
             '--viewall', '--autocenter', '--render']
         if len(openscad_input) > 1:
           args += ['-D', ('$import_filename="' + str(env.File(openscad_input[1]).abspath) + '"')]
-
         env.Openscad(target=openscad_output,source=openscad_input,ARGS=args,COUNTER=counter)
 
 def filter_stl(target, source, env):
@@ -139,13 +138,23 @@ def filter_stl(target, source, env):
              '-s', str(source[1])]
   return stream_command(command, [])
 
+def sort_stl_command(target, source, env, for_signature):
+  outfile = str(target[0])
+  infile = str(source[0])
+  command = '%s < %s > %s' % (stl_sorter_binary, infile, outfile)
+  return command
+
 openscad_builder = Builder(
     action = openscad)
 filter_stl_builder = Builder(action = filter_stl, suffix = 'filtered.stl', src_suffix = ".stl")
+sort_stl_builder = Builder(generator = sort_stl_command, suffix = 'sorted.stl', src_suffix = ".stl")
 env = Environment(
-    BUILDERS = {'Openscad': openscad_builder, 'FilterStl': filter_stl_builder})
+    BUILDERS = {'Openscad': openscad_builder,
+                'FilterStl': filter_stl_builder,
+                'SortStl': sort_stl_builder})
 #print GetOption('fn')
 #env["fn"] = int(GetOption('fn'))
+stl_sorter_binary = env.File("tools/stl_sorter.py").srcnode().abspath
 
 include_re = re.compile(r'^(?:use|include)\s*\<(\S+)\>', re.M)
 
