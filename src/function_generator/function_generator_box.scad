@@ -88,56 +88,44 @@ module reverse_difference() {
 
 $inner_thickness = 1;
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print", 18) {
-    // Left BNC.
-    add_front_port_top([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 17) {
-      circle(r=12.25/2+$static_clearance);
-      add_top_screen_hole(pcb_offset+[1.07,pcb_depth-33,0], 0, 16) {
-        square([5.53, 13.2]);
-        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
-          rotate(90) arrow_up();
-          add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 14) {
-            rotate(-90) arrow_up();
-            add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 13) {
-              rotate(0) arrow_up();
-              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
-                rotate(180) arrow_up();
-                add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
-                  circle(r=4);
-                  add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
-                    translate([-4, -4]) square([8,8]);
-                    add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
-                      square([71.1-2*$thickness, 24-2*$thickness]);
-                      add_top_support_posts() {
-                        add_screw_posts_in_corners(screw_type) {
-                          reverse_difference() {
-                            union() {
-                              // Right BNC.
-                              translate([pcb_offset[0]+16.09+16.71,
-                                         $box_size[1]+$epsilon,
-                                         $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-12.25/2]) {
-                                rotate([90,0,0]) {
-                                  cylinder(h=$thickness+2*$epsilon, r=12.25/2+$static_clearance);
-                                }
-                              }
-                              // Right knob.
-                              translate([pcb_offset[0]+pcb_width-15.04,
-                                         $box_size[1]+$epsilon,
-                                         $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-6.99]) {
-                                rotate([90,0,0]) {
-                                  cylinder(h=$thickness+2*$epsilon, r=7/2+$static_clearance);
-                                }
-                              }
-                              // Left knob.
-                              translate([pcb_offset[0]+pcb_width-28.26,
-                                         $box_size[1]+$epsilon,
-                                         $box_size[2]-$thickness-pcb_bottom_clearance-$pcb_thickness-6.99]) {
-                                rotate([90,0,0]) {
-                                  cylinder(h=$thickness+2*$epsilon, r=7/2+$static_clearance);
+  render_box_top($group == "demo" ? "demo" : "print", 21) {
+    // Left knob.
+    add_front_port_top([pcb_offset[0]+pcb_width-28.26,0,$thickness+pcb_bottom_clearance+$pcb_thickness+6.99], 20) {
+      circle(r=7/2+$static_clearance);
+      // Right knob.
+      add_front_port_top([pcb_offset[0]+pcb_width-15.04,0,$thickness+pcb_bottom_clearance+$pcb_thickness+6.99], 19) {
+        circle(r=7/2+$static_clearance);
+        // Right BNC.
+        add_front_port_top([pcb_offset[0]+16.09+16.71,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 18) {
+          circle(r=12.25/2+$static_clearance);
+          // Left BNC.
+          add_front_port_top([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 17) {
+            circle(r=12.25/2+$static_clearance);
+            add_top_screen_hole(pcb_offset+[1.07,pcb_depth-33,0], 0, 16) {
+              square([5.53, 13.2]);
+              add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9, 22.8, 0], 8.3, 15) {
+                rotate(90) arrow_up();
+                add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*2, 22.8, 0], 8.3, 14) {
+                  rotate(-90) arrow_up();
+                  add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8+10.03333, 0], 8.3, 13) {
+                    rotate(0) arrow_up();
+                    add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8-10.03333, 0], 8.3, 12) {
+                      rotate(180) arrow_up();
+                      add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333, 22.8, 0], 8.3, 11) {
+                        circle(r=4);
+                        add_top_button_hole(pcb_offset+[pcb_width, pcb_depth, 0]-[4.9+10.03333*3, 22.8, 0], 8.3, 10) {
+                          translate([-4, -4]) square([8,8]);
+                          add_top_screen_hole(pcb_offset+[4.4+$thickness, 14+$thickness,0], 18.9, 9) {
+                            square([71.1-2*$thickness, 24-2*$thickness]);
+                            add_top_support_posts() {
+                              add_screw_posts_in_corners(screw_type) {
+                                reverse_difference() {
+                                  union() {
+                                  }
+                                  box_top(0);
                                 }
                               }
                             }
-                            box_top(0);
                           }
                         }
                       }
@@ -153,12 +141,25 @@ if ($group == "demo" || $group == "top") {
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print", 10) {
-    add_front_port_bottom([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 9) {
-      circle(r=12.25/2+$static_clearance);
-      add_bottom_support_posts() {
-        add_screw_holes_in_corners(screw_type) {
-          box_bottom(0);
+  render_box_bottom($group == "demo" ? "demo" : "print", 13) {
+    // Left knob.
+    add_front_port_bottom([pcb_offset[0]+pcb_width-28.26,0,$thickness+pcb_bottom_clearance+$pcb_thickness+6.99], 12) {
+      circle(r=7/2+$static_clearance);
+      // Right knob.
+      add_front_port_bottom([pcb_offset[0]+pcb_width-15.04,0,$thickness+pcb_bottom_clearance+$pcb_thickness+6.99], 11) {
+        circle(r=7/2+$static_clearance);
+        // Right BNC.
+        add_front_port_bottom([pcb_offset[0]+16.09+16.71,0,5+$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 10) {
+          circle(r=12.25/2+$static_clearance);
+          // Left BNC.
+          add_front_port_bottom([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 9) {
+            circle(r=12.25/2+$static_clearance);
+            add_bottom_support_posts() {
+              add_screw_holes_in_corners(screw_type) {
+                box_bottom(0);
+              }
+            }
+          }
         }
       }
     }
