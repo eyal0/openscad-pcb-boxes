@@ -149,7 +149,7 @@ if ($group == "demo" || $group == "bottom") {
       add_front_port_bottom([pcb_offset[0]+pcb_width-15.04,0,$thickness+pcb_bottom_clearance+$pcb_thickness+6.99], 11) {
         circle(r=7/2+$static_clearance);
         // Right BNC.
-        add_front_port_bottom([pcb_offset[0]+16.09+16.71,0,5+$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 10) {
+        add_front_port_bottom([pcb_offset[0]+16.09+16.71,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 10) {
           circle(r=12.25/2+$static_clearance);
           // Left BNC.
           add_front_port_bottom([pcb_offset[0]+16.09,0,$thickness+pcb_bottom_clearance+$pcb_thickness+12.25/2], 9) {
