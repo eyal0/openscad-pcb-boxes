@@ -3,7 +3,7 @@
 Import('env openscad2 openscad_counter')
 
 parts = {'top': 22,
-         'bottom': 14,
+         'bottom': 13,
          'right': 2,
          'left': 2,
          'up': 2,

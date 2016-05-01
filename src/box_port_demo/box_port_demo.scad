@@ -27,18 +27,24 @@ $fn=20;
 $group = "bottom";
 $level = -1;
 if ($group == "demo" || $group == "top") {
-  render_box_top($group == "demo" ? "demo" : "print", 2) {
-    add_front_port_top([15,0,15], 1) {
+  render_box_top($group == "demo" ? "demo" : "print", 3) {
+    add_front_port_top([15,0,15], 2) {
       arrow_up();
-      box_top(0);
+      add_front_port_top([15,0,15], 1) {
+        arrow_up();
+        box_top(0);
+      }
     }
   }
 }
 if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print", 2) {
-    add_front_port_bottom([15,0,15], 1)  {
-      arrow_up();
-      box_bottom(0);
+  render_box_bottom($group == "demo" ? "demo" : "print", 3) {
+    add_front_port_bottom([35,0,15], 2)  {
+      circle(r=5);
+      add_front_port_bottom([15,0,15], 1)  {
+        circle(r=5);
+        box_bottom(0);
+      }
     }
   }
 }

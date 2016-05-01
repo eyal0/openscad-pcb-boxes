@@ -2,8 +2,8 @@
 
 Import('env openscad2 openscad_counter')
 
-parts = {'top': 2,
-         'bottom': 2}
+parts = {'top': 4,
+         'bottom': 4}
 
 for part in parts:
   openscad_counter(target='box_port_demo_' + part,
