@@ -27,11 +27,11 @@ while count < 10000:
   joined_facet = solid.remove_planar_edge()
   if not joined_facet:
     break
-  sys.stderr.write("joining a facet %d\n" % count)
+  #sys.stderr.write("joining a facet %d\n" % count)
   count += 1
   while joined_facet.remove_1d_vertex():
     #joined_facet.remove_colinear_vertex()):
-    sys.stderr.write("removing a vertex\n")
+    #sys.stderr.write("removing a vertex\n")
     pass
 
 new_f = []
