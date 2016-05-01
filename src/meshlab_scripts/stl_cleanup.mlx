@@ -2,6 +2,6 @@
 <FilterScript>
  <filter name="Remove Duplicated Vertex"/>
  <filter name="Merge Close Vertices">
-   <Param type="RichAbsPerc" value="0.00001" min="0" name="Threshold" max="1.4701"/>
+   <Param type="RichAbsPerc" value="0.1" min="0" name="Threshold" max="1.4701"/>
  </filter>
 </FilterScript>
