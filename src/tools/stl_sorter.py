@@ -22,9 +22,9 @@ else:
 #  new_facets.append(f_new)
 #solid.facets = new_facets
 
-for i in range(len(solid.facets)):
-  solid.facets[i].recalculate_normal()
-
+#for i in range(len(solid.facets)):
+#  solid.facets[i].recalculate_normal()
+#
 #count = 0
 #while count < 10000:
 #  joined_facet = solid.remove_planar_edge()
@@ -40,17 +40,19 @@ for i in range(len(solid.facets)):
 #      solid.facets.remove(joined_facet)
 #      break
 #    pass
-
+#
+#
 #new_f = []
 #for f in solid.facets:
 #  new_triangles = f.split_to_triangles()
 #  for t in new_triangles:
 #    t.recalculate_normal()
 #    sys.stderr.write("removing: %s\n" % t)
-#    #if not t.normal:
-#    #  new_triangles.remove(t)
+#    if not t.normal:
+#      new_triangles.remove(t)
 #  new_f += new_triangles
 #solid = stl.Solid(solid.name, new_f)
+#
 solid.sort_facets()
 
 if infile_ascii:
