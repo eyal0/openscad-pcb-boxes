@@ -10,150 +10,19 @@ use <wiggle.scad>;
 // it is off the top of the pcb.
 
 // Made as thick as tab_thickness and padded by $epsilon on both sides.
-module front_port_hole(port_offset, tab_thickness, tab_padding) {
+module front_port_hole(port_offset, radius, tab_thickness, tab_padding) {
   // Make the hole for the port.
   translate([port_offset[0], tab_thickness+tab_padding, port_offset[2]]) {
     rotate([90,0,0]) {
-      linear_extrude(tab_thickness+2*tab_padding) {
-        children();
-      }
+      cylinder(h=tab_thickness+2*tab_padding, r=radius);
     }
   }
 }
 
-//$epsilon=0.3;
-// Extends the 3d shape down to the xy plane, extending below by extend_below.
-module project_to_xy(extend_below) {
-  union() {
-    children();
-    difference() {
-      hull() {
-        children();
-        translate([0,0,-extend_below]) {
-          linear_extrude($epsilon) {
-            projection() {
-              children();
-            }
-          }
-        }
-      }
-      translate([0,$epsilon,$epsilon]) {
-        hull() {
-          children();
-          translate([0,0,$box_size[2]]) {
-            linear_extrude($epsilon) {
-              projection() {
-                children();
-              }
-            }
-          }
-        }
-      }
-      translate([0,-$epsilon,$epsilon]) {
-        hull() {
-          children();
-          translate([0,0,$box_size[2]]) {
-            linear_extrude($epsilon) {
-              projection() {
-                children();
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-// Project the child down to xy but without the original child.
-module tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
-  difference() {
-    project_to_xy(extend_below) {
-      front_port_hole(port_offset,
-                      tab_thickness, tab_padding) {
-        children();
-      }
-    }
-    minkowski(convexity=10) {
-      sphere(r=$epsilon);
-      front_port_hole(port_offset,
-                      tab_thickness, tab_padding) {
-        children();
-      }
-    }
-  }
-}
-
-//$epsilon=0.1;
-
-// Create the left or right most edge of the child.
-// direction is "left" or "right"
-module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-  shift = direction=="left" ? $epsilon : -$epsilon;
-  difference() {
-    hull() { // For some reason, this helps remove an artifact in the bottom, maybe?
-      tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
-        children();
-      }
-    }
-    /*minkowski(convexity=10) {
-      sphere(r=$epsilon);
-      translate([shift, 0,0]) {
-        tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
-          children();
-        }
-      }
-    }*/
-    translate([shift, -$epsilon, $epsilon]) {
-      hull() // For some reason, this helps remove an artifact in the bottom.
-        tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
-          children();
-      }
-    }
-    translate([shift, -$epsilon, -$epsilon]) {
-      hull() // For some reason, this helps remove an artifact in the bottom.
-      tab_without_lap(port_offset,tab_thickness+2*$epsilon, tab_padding, extend_below) {
-        children();
-      }
-    }
-  }
-}
-//$epsilon=0.01;
-// Create the rightmost or leftmost edge of the child, extended to
-// $thickness width.
-module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-  shift = direction=="left" ? -$thickness : $thickness;
-  translate([-shift/$thickness,0,0])
-  hull() {
-    lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-      children();
-    }
-    translate([shift,0,0]) {
-      lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
-        children();
-      }
-    }
-  }
-}
-
-// Project child to xy and add side wings in x on both sides.
-module tab_with_lap(port_offset, tab_thickness, tab_padding, extend_below) {
-  lap(port_offset, tab_thickness, tab_padding, "left", extend_below) {
-    children();
-  }
-  lap(port_offset, tab_thickness, tab_padding, "right", extend_below) {
-    children();
-  }
-  tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
-    children();
-  }
-}
-
-// First child should be a two-dimensional shape to cut out of the
-// front of the box.  port_offset should have only positive x and z
-// values.  Assume that the highest, widest point of the shape is on
-// the y axis for extending tabs.
-module add_front_port_top(port_offset, level) {
+// Makes a round port with given radius.  port_offset should have only
+// positive x and z values.  Assume that the highest, widest point of
+// the shape is on the y axis for extending tabs.
+module add_front_port_top(port_offset, radius, level) {
   level_preamble(level) {
     children([1:$children-1]);
     difference() {
@@ -161,53 +30,65 @@ module add_front_port_top(port_offset, level) {
         children([1:$children-1]);
       }
       render_box_top("demo", -1) {
-        union() {
-          project_to_xy($epsilon) {
-            front_port_hole(port_offset, $thickness, $epsilon) {
-              children(0);
-            }
-          }
-          // For the overlapping section, half thickness.
-          tab_with_lap(port_offset,
-                       $thickness/2+$static_clearance/2,
-                       $epsilon,
-                       $epsilon) {
-            children(0);
-          }
+        front_port_hole(port_offset,
+                        radius+$static_clearance,
+                        $thickness+$epsilon+2, $epsilon);
+        translate([port_offset[0]-radius-$static_clearance,
+                   -$epsilon,
+                   -$epsilon]) {
+          cube([radius*2+2*$static_clearance,
+                $thickness+2*$epsilon,
+                $epsilon+port_offset[2]]);
+        }
+        translate([port_offset[0]-radius-$static_clearance-$thickness,
+                   -$epsilon,
+                   -$epsilon]) {
+          cube([radius*2+2*$static_clearance+$thickness*2,
+                $thickness/2+$static_clearance/2+$epsilon,
+                $epsilon+port_offset[2]+$static_clearance]);
         }
       }
     }
   }
 }
 
-// First child should be a two-dimensional shape to cut out of the
-// front of the box.  port_offset should have only positive x and z
+// Makes a round port with given radius.
+// port_offset should have only positive x and z
 // values.  Assume that the highest, widest point of the shape is on
 // the y axis for extending tabs.
-module add_front_port_bottom(port_offset, level) {
+module add_front_port_bottom(port_offset, radius, level) {
   level_preamble(level) {
     children([1:$children-1]);
     level_import(level) {
       children([1:$children-1]);
     }
-    union() {
-      tab_without_lap(port_offset, $thickness, 0, 0) {
-        children(0);
-      }
-      tab_with_lap(port_offset, $thickness/2-$static_clearance/2, 0, 0) {
-        children(0);
-      }
-    }
-    translate([0,0,$thickness]) {
-      rotate([-90,0,0]) {
-        linear_extrude($thickness + $static_clearance + $epsilon) {
-          projection() {
-            front_port_hole(port_offset, $thickness, 0) {
-              children(0);
-            }
-          }
+    difference() {
+      union() {
+        translate([port_offset[0]-radius,
+                   0,
+                   0]) {
+          cube([radius*2,
+                $thickness,
+                port_offset[2]]);
+        }
+        translate([port_offset[0]-radius-$thickness,
+                   0,
+                   0]) {
+          cube([radius*2+$thickness*2,
+                $thickness/2-$static_clearance/2,
+                port_offset[2]]);
+        }
+        translate([port_offset[0]-radius,
+                   0,
+                   0]) {
+          cube([2*radius,
+                $thickness + $static_clearance + $epsilon,
+                $thickness]);
         }
       }
+      front_port_hole(port_offset,
+                      radius+$static_clearance,
+                      $thickness+$epsilon+2, $epsilon);
     }
   }
 }
