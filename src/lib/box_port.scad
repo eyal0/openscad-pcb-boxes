@@ -1,6 +1,7 @@
 use <box_top.scad>;
 use <upsidedown.scad>;
 use <import_children.scad>;
+use <wiggle.scad>;
 
 // button_offset should be offset to move the first child relative to
 // bottom-left corner of the box top when upside-down.  First child
@@ -90,8 +91,10 @@ module tab_without_lap(port_offset, tab_thickness, tab_padding, extend_below) {
 module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
   shift = direction=="left" ? $epsilon : -$epsilon;
   difference() {
-    tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
-      children();
+    hull() { // For some reason, this helps remove an artifact in the bottom, maybe?
+      tab_without_lap(port_offset,tab_thickness,tab_padding,extend_below) {
+        children();
+      }
     }
     /*minkowski(convexity=10) {
       sphere(r=$epsilon);
@@ -117,9 +120,10 @@ module lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_belo
 }
 //$epsilon=0.01;
 // Create the rightmost or leftmost edge of the child, extended to
-// $thickness width..
+// $thickness width.
 module lap(port_offset, tab_thickness, tab_padding, direction, extend_below) {
   shift = direction=="left" ? -$thickness : $thickness;
+  translate([-shift/$thickness,0,0])
   hull() {
     lap_strip(port_offset, tab_thickness, tab_padding, direction, extend_below) {
       children();
@@ -145,10 +149,10 @@ module tab_with_lap(port_offset, tab_thickness, tab_padding, extend_below) {
   }
 }
 
-//$epsilon=0.3;
 // First child should be a two-dimensional shape to cut out of the
-// front of the box.  port_offset should have only positive y and z
-// values.
+// front of the box.  port_offset should have only positive x and z
+// values.  Assume that the highest, widest point of the shape is on
+// the y axis for extending tabs.
 module add_front_port_top(port_offset, level) {
   level_preamble(level) {
     children([1:$children-1]);
@@ -176,8 +180,10 @@ module add_front_port_top(port_offset, level) {
   }
 }
 
-//$epsilon=0.5;
-
+// First child should be a two-dimensional shape to cut out of the
+// front of the box.  port_offset should have only positive x and z
+// values.  Assume that the highest, widest point of the shape is on
+// the y axis for extending tabs.
 module add_front_port_bottom(port_offset, level) {
   level_preamble(level) {
     children([1:$children-1]);
@@ -185,7 +191,7 @@ module add_front_port_bottom(port_offset, level) {
       children([1:$children-1]);
     }
     union() {
-      tab_without_lap(port_offset, $thickness, 0) {
+      tab_without_lap(port_offset, $thickness, 0, 0) {
         children(0);
       }
       tab_with_lap(port_offset, $thickness/2-$static_clearance/2, 0, 0) {
