@@ -24,10 +24,10 @@ module front_port_hole(port_offset, radius, tab_thickness, tab_padding) {
 // the shape is on the y axis for extending tabs.
 module add_front_port_top(port_offset, radius, level) {
   level_preamble(level) {
-    children([1:$children-1]);
+    children();
     difference() {
       level_import(level) {
-        children([1:$children-1]);
+        children();
       }
       render_box_top("demo", -1) {
         front_port_hole(port_offset,
@@ -58,9 +58,9 @@ module add_front_port_top(port_offset, radius, level) {
 // the y axis for extending tabs.
 module add_front_port_bottom(port_offset, radius, level) {
   level_preamble(level) {
-    children([1:$children-1]);
+    children();
     level_import(level) {
-      children([1:$children-1]);
+      children();
     }
     difference() {
       union() {
