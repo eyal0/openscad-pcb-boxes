@@ -30,9 +30,3 @@ if ($group == "demo" || $group == "bottom") {
     }
   }
 }
-/*if ($group == "demo" || $group == "bottom") {
-  render_box_bottom($group == "demo" ? "demo" : "print", 0) {
-    box_bottom(0);
-  }
-}
-*/
